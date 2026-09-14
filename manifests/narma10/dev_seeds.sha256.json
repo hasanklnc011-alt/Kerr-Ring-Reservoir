@@ -1,0 +1,71 @@
+{
+  "entries": [
+    {
+      "index": 0,
+      "input_sha256": "696e6ac5c467cbbd204f1a50406abc88233ef25ba445813b6c36e171238bf94b",
+      "length": 5200,
+      "seed": 11556900618465451879,
+      "target_first": 0.10638566427391317,
+      "target_last": 0.3745607840840798,
+      "target_sha256": "7a14fd95e1d78cb5a0dcd27d718e6d015f742fe14c1ae761b3c22e79851ac28c"
+    },
+    {
+      "index": 1,
+      "input_sha256": "660debfed3b8f92aa2ea1aa753d76e7a126e3fe0672bbc43987f50c0bb04f4cd",
+      "length": 5200,
+      "seed": 9968641489563861177,
+      "target_first": 0.11525517587536531,
+      "target_last": 0.4462511068399947,
+      "target_sha256": "fb2bb5484a50ad81260e75c5ba324f7dd877d8dac8b34aaa576ca07a0ca7fae9"
+    },
+    {
+      "index": 2,
+      "input_sha256": "344d60145a56908425acef8dfa23c70ef691dc035e1a6d3c09c2cbadb2a5067d",
+      "length": 5200,
+      "seed": 1561036751943785860,
+      "target_first": 0.12998829289504485,
+      "target_last": 0.24045067409706422,
+      "target_sha256": "8f4530f0a019a2907d58cb257c4eaa14a3fde6011953e6c6e896f8e23852cb05"
+    },
+    {
+      "index": 3,
+      "input_sha256": "53b0f5c2c88d9c594e8831b7da73b29aa4f241cd4ee67fa9675b9460b96b6c58",
+      "length": 5200,
+      "seed": 9822662380272772020,
+      "target_first": 0.3780098082722837,
+      "target_last": 0.1953318448423768,
+      "target_sha256": "5ac81ffec04b47cdb3887c1cae9a7113d6a8db1b77faa536b94a5c11960ae57e"
+    },
+    {
+      "index": 4,
+      "input_sha256": "75dad7de492454a0ea4fa963a727d805cdc753ec43b64b7c568f4bf0c4bd65d1",
+      "length": 5200,
+      "seed": 5900621378319465697,
+      "target_first": 0.12160224493558486,
+      "target_last": 0.4507311787476741,
+      "target_sha256": "1e801a8f1d8bde17556f8508a21f482f39409e92896d113d2faa6447724c1353"
+    }
+  ],
+  "manifest_digest": "1b865944b5f99eeb8f408121760fe0f5f178b7eb58aae24e47401c7bdd13d482",
+  "schema": "narma10-manifest/1",
+  "spec": {
+    "coefficients": {
+      "alpha": 0.3,
+      "beta": 0.05,
+      "delta": 0.1,
+      "gamma": 1.5
+    },
+    "count": 5,
+    "input_range": [
+      0.0,
+      0.5
+    ],
+    "master_seed": 20260910,
+    "namespace": "narma10/dev",
+    "order": 10,
+    "sequence_length": 5200,
+    "test_len": 2000,
+    "train_len": 3000,
+    "washout": 200
+  }
+}

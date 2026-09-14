@@ -1,0 +1,116 @@
+{
+  "entries": [
+    {
+      "index": 0,
+      "input_sha256": "f33e704660fbfb46582a61acae28272174b0b925fb77195e31fde83e0bb3ea63",
+      "length": 5200,
+      "seed": 16264495157047989712,
+      "target_first": 0.1382330025475108,
+      "target_last": 0.2755943247489172,
+      "target_sha256": "c9dba19030d6e863ed1e0c2990c8d933030d206a13350f69ea8f3c8071434429"
+    },
+    {
+      "index": 1,
+      "input_sha256": "4ff7c111b4e4013c02bd9c336b8ea92d070c07d46dfeb2a3ad6abaf0e165a0bc",
+      "length": 5200,
+      "seed": 10249356993094981122,
+      "target_first": 0.16455941611599678,
+      "target_last": 0.27934058006485296,
+      "target_sha256": "ebc1024cdf64b17f682241bc067d7d6b2ae2068847020d881c014b21159da6c1"
+    },
+    {
+      "index": 2,
+      "input_sha256": "adad60b9ea3a6b2533774f3246df27153bed54357a607c9d8131193e81c030b9",
+      "length": 5200,
+      "seed": 1655140470178779074,
+      "target_first": 0.18060480069550544,
+      "target_last": 0.38654108684270516,
+      "target_sha256": "120b9e82b792a43fa0a137c85e5b666098cf7fdde11713eac2919e3722d8f866"
+    },
+    {
+      "index": 3,
+      "input_sha256": "571761022fdc5e1558c19c535ed37b951cab137b550edeee24fc8a0877ad5e80",
+      "length": 5200,
+      "seed": 5165397328988495648,
+      "target_first": 0.42031943626469315,
+      "target_last": 0.2907440491352853,
+      "target_sha256": "774820fb865868c00c17c9806d0d1d390c9a2fa90dd35cce8a199d0711a62ebc"
+    },
+    {
+      "index": 4,
+      "input_sha256": "0604aab81c49657d427c6921744c266fd1b0baa4e66f0005345ad7569a9d8cfe",
+      "length": 5200,
+      "seed": 16847657098405106489,
+      "target_first": 0.32469357330049464,
+      "target_last": 0.4559159799535921,
+      "target_sha256": "4ab3060fa8899c73db75c868c251416e6a44009fc33ac546ec88d8e7005f93d5"
+    },
+    {
+      "index": 5,
+      "input_sha256": "25e07f6deed997cbb480955c259a87c28b8a7928ed3cbe56f945517d1dd7dd81",
+      "length": 5200,
+      "seed": 17213636153260517462,
+      "target_first": 0.11148383683380918,
+      "target_last": 0.2481651564249243,
+      "target_sha256": "f4bb86291dcfb29b37f1f781a8e1fb2580573b9dfda0c04acef4e51ae2c18983"
+    },
+    {
+      "index": 6,
+      "input_sha256": "4b187d8485a91b1525c43428282f1f1ac0f469f7be6715257e5de737602c0a91",
+      "length": 5200,
+      "seed": 17331016809641268636,
+      "target_first": 0.33534468858663596,
+      "target_last": 0.4247441681027009,
+      "target_sha256": "5a22aa062d198b456f85c61a33db6da9f52517d68025d0d5e11200af14573819"
+    },
+    {
+      "index": 7,
+      "input_sha256": "625332085c06711f91afd306e69e70f813c076da99bbd271827b1afaa7127d5e",
+      "length": 5200,
+      "seed": 4787580772960057293,
+      "target_first": 0.17007069846806847,
+      "target_last": 0.5207196930311091,
+      "target_sha256": "fc1ae13067c2465c2fbfcc08f5c554a9d0580d5e25eebcbfaa231f42e4308f19"
+    },
+    {
+      "index": 8,
+      "input_sha256": "8c540377aa489f5637771821f5de0df6912d814673fef45b3953c63274273ad7",
+      "length": 5200,
+      "seed": 13107091647883035491,
+      "target_first": 0.32390863315666907,
+      "target_last": 0.41417925936854805,
+      "target_sha256": "928316129da2bff2c617c31085d85b38290df42b5b9be4fdada25fd9a08ef45f"
+    },
+    {
+      "index": 9,
+      "input_sha256": "36748c725c8f47e6a9f7aa13c3c12843d07c973d1b8406cb557d057137203439",
+      "length": 5200,
+      "seed": 1024132847248116216,
+      "target_first": 0.3215165475657069,
+      "target_last": 0.288920237623167,
+      "target_sha256": "ed2f1365ac00cbf0dce2956ce30cd28397b228da9130e4a06941cad863508304"
+    }
+  ],
+  "manifest_digest": "6cc96caac8f6244207e4f0d2c82cea2c5ad6138c25ebc5a9e8ebddd3d78eb4ea",
+  "schema": "narma10-manifest/1",
+  "spec": {
+    "coefficients": {
+      "alpha": 0.3,
+      "beta": 0.05,
+      "delta": 0.1,
+      "gamma": 1.5
+    },
+    "count": 10,
+    "input_range": [
+      0.0,
+      0.5
+    ],
+    "master_seed": 909314159265358,
+    "namespace": "narma10/blind",
+    "order": 10,
+    "sequence_length": 5200,
+    "test_len": 2000,
+    "train_len": 3000,
+    "washout": 200
+  }
+}
