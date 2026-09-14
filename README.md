@@ -39,7 +39,7 @@ bir kez tüketilir. Başarısızlık, nedenleriyle birlikte geçerli araştırma
 - `docs/decisions/` — bu depoda alınan kararlar
 - `docs/inherited/` — eski depodan devralınan kanıt ve geri çekme kayıtları (tarihçe, talimat değil)
 - `reports/FLEXCREDIT-LEDGER.md` — ortak bütçe defteri
-- `plan2_kerr/` — G2 bellek üçgeni modeli ve tarama CLI'ı
+- `plan2_kerr/` — G2 bellek üçgeni, ESN referans eğrisi ve slot/port bütçesi
 - `fdtd/modes/` — G1 eigenmode tanı hattı ve ortam kapısı
 - `requirements/` — izole mode-solver ortamı ve kilidi
 - `studies/` — hat çalışma alanları ve raporlar
@@ -51,5 +51,6 @@ python -m tests.narma10_np.run_tests    # benchmark + kör yol güvenliği (122)
 python -m tests.plan2_kerr.run_tests    # G2 bellek üçgeni (41)
 python -m tests.fdtd.run_tests          # G1 mode tanısı (36)
 python -m plan2_kerr.screen --boundary  # G2 taraması
+python -m plan2_kerr.slot_decision      # slot/port bütçesi
 ./.venv-mode-211/Scripts/python.exe -m fdtd.modes env  # G1 ortam kapısı
 ```

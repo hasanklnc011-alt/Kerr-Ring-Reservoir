@@ -39,6 +39,17 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 - Açık: `ε` gürültü modeli olmadan keyfî (P2'ye taşındı); termal kayma
   `α_abs` ve `R_th` olmadan hesaplanamıyor (P1/K2a).
 
+## [SLOT] Slot/port bütçesi kararı
+- Sahip: Claude (analiz); karar Hasan
+- Durum: slot azaltma KABUL; `(slot, port)` çifti **OPEN** —
+  [karar kaydı](docs/decisions/2026-09-14-slot-count.md),
+  [rapor](studies/plan2-kerr/SLOT-DECISION.md)
+- `Q_floor` yalnız slota bağlı, porta değil: slot ↓ + port ↑ tek tutarlı hamle.
+- Özellik hedefi 30 (P3'ün gerçekçi fizik sonucu). ESN referansı 300'de geçiyor;
+  bu bir taban değil, gereken ×10 özellik-verimliliğinin ölçüsü.
+- Öneri: **8 slot × 4 port = 32 özellik**; `Q_i ≥ 3.89e6`, kayıp ≤ 0.091 dB/cm.
+- Bekleyen: Hasan'ın port kararı (2 → 4 Plan 2 ADR §4'ü değiştirir).
+
 ## [P0] Araştırma ve benchmark sınırı — 0 FC
 - Durum: OPEN; bağımlılık G0
 - İş ve kabul: Plan 2 ADR §2. Teslimat `studies/plan2-kerr/` altında
