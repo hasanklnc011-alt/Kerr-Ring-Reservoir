@@ -1,6 +1,6 @@
 # Backlog
 
-Kanonik sıra: **G0 (kapandı) → G1 → G2 → P0 → P1 …**
+Kanonik sıra: **G0 ✓ → G2 ✓ → G1 → P0 → P1 …**
 Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 [migrasyon](docs/decisions/2026-09-14-repo-migration.md). Geçmiş: `BACKLOGLOG.md`.
 
@@ -29,17 +29,15 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 
 ## [G2] Kerr bellek üçgeni
 - Sahip: Claude
-- Durum: OPEN
-- Bağımlılık: yok
-- İş: Kerr anlık olduğundan belleğin foton ömründen geldiğini varsayarak
-  `Q`, `T_sym`, giriş gücü ve NARMA-10 geçmiş derinliği arasındaki fizibilite
-  bölgesini kapalı formda çıkar. Kerr rezonans kayması / linewidth oranını
-  kaynaklı `n2` ile tahmin et. Termo-optik kaymayı aynı çalışma noktasında
-  yan yana koy. Erişilebilir modülatör/detektör hızı sınırını uygula.
-- Kabul: her aday platform için fizibilite bölgesinin boş olup olmadığı
-  sayıyla gösterilir; bölge boşsa Kerr-only hattı durur.
-- Not: Bu kapı P1 platform taramasından önce gelir; hangi platformun
-  aranmaya değer olduğunu belirler.
+- Durum: **CLOSED** 2026-09-14 — [karar kaydı](docs/decisions/2026-09-14-g2-memory-triangle.md),
+  [rapor](studies/plan2-kerr/MEMORY-TRIANGLE.md)
+- Sonuç: `Q_floor = m·ω₀·N/(ln(1/ε)·B)`, malzemeden bağımsız. Nominal Plan 2
+  ayarında (m=10, N=20, B=50 GHz, ε=1/e) `Q_L ≥ 4.86e6`, yani `≤0.036 dB/cm`.
+  Si₃N₄ ve AlGaAsOI adaylarının ikisinde de bölge **boş**; ikisi de ~7 slot
+  veya ~3.6 sembol derinlik taşıyabiliyor.
+- Kanıt: `tests/plan2_kerr/` 41/41; `python -m plan2_kerr.screen --boundary`.
+- Açık: `ε` gürültü modeli olmadan keyfî (P2'ye taşındı); termal kayma
+  `α_abs` ve `R_th` olmadan hesaplanamıyor (P1/K2a).
 
 ## [P0] Araştırma ve benchmark sınırı — 0 FC
 - Durum: OPEN; bağımlılık G0
