@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, replace
 
+from .alignment import DEFAULT_OFFSETS, measure_averaged
 from .cross_sections import CrossSection
 from .selection import SelectionCriteria, select_te_core_mode
 from .solver import SolveSettings, solve
@@ -38,6 +39,12 @@ class Sensitivity:
     dn_eff_d_height_per_um: float
     dlambda_d_width_pm_per_nm: float
     dlambda_d_height_pm_per_nm: float
+    offset_averaged: bool = False
+    alignment_swing: float = float("nan")
+    """Peak-to-peak sub-cell spread of ``n_eff`` at the nominal geometry.
+
+    With ``offset_averaged`` false this is the size of the artefact sitting on
+    top of the derivative; the derivative is then only a diagnostic."""
 
     def linewidth_pm(self, q_loaded: float, wavelength_nm: float = 1550.0) -> float:
         """FWHM in picometres: ``lambda / Q_L``."""
@@ -58,7 +65,12 @@ class Sensitivity:
 
 
 def _n_eff(cs: CrossSection, settings: SolveSettings,
-           criteria: SelectionCriteria) -> tuple[float, float]:
+           criteria: SelectionCriteria,
+           *, averaged: bool = False, offsets=DEFAULT_OFFSETS) -> tuple[float, float]:
+    """One geometry point: either a single alignment or the offset average."""
+    if averaged:
+        result = measure_averaged(cs, settings, offsets=offsets, criteria=criteria)
+        return result.n_eff, result.n_group
     selected = select_te_core_mode(solve(cs, settings), criteria)
     return selected.n_eff, selected.n_group
 
@@ -67,27 +79,36 @@ def measure(cross_section: CrossSection,
             settings: SolveSettings | None = None,
             *,
             half_step_um: float = DEFAULT_HALF_STEP_UM,
-            criteria: SelectionCriteria | None = None) -> Sensitivity:
-    """Central-difference geometry derivatives for one cross-section."""
+            criteria: SelectionCriteria | None = None,
+            offset_averaged: bool = True,
+            offsets=DEFAULT_OFFSETS) -> Sensitivity:
+    """Central-difference geometry derivatives for one cross-section.
+
+    ``offset_averaged`` defaults to true: a single-alignment derivative carries
+    a sub-cell artefact comparable to the derivative itself (see
+    :mod:`fdtd.modes.alignment`).
+    """
     settings = settings or SolveSettings(steps_per_wvl=26)
     criteria = criteria or SelectionCriteria()
     if half_step_um <= 0:
         raise ValueError("half_step_um must be positive")
 
-    n_eff, n_group = _n_eff(cross_section, settings, criteria)
+    swing = float("nan")
+    if offset_averaged:
+        nominal = measure_averaged(cross_section, settings, offsets=offsets,
+                                   criteria=criteria)
+        n_eff, n_group, swing = nominal.n_eff, nominal.n_group, nominal.swing
+    else:
+        n_eff, n_group = _n_eff(cross_section, settings, criteria)
 
-    wide, _ = _n_eff(replace(cross_section,
-                             width_um=cross_section.width_um + half_step_um),
-                     settings, criteria)
-    narrow, _ = _n_eff(replace(cross_section,
-                               width_um=cross_section.width_um - half_step_um),
-                       settings, criteria)
-    tall, _ = _n_eff(replace(cross_section,
-                             height_um=cross_section.height_um + half_step_um),
-                     settings, criteria)
-    short, _ = _n_eff(replace(cross_section,
-                              height_um=cross_section.height_um - half_step_um),
-                      settings, criteria)
+    def at(cs):
+        return _n_eff(cs, settings, criteria,
+                      averaged=offset_averaged, offsets=offsets)[0]
+
+    wide = at(replace(cross_section, width_um=cross_section.width_um + half_step_um))
+    narrow = at(replace(cross_section, width_um=cross_section.width_um - half_step_um))
+    tall = at(replace(cross_section, height_um=cross_section.height_um + half_step_um))
+    short = at(replace(cross_section, height_um=cross_section.height_um - half_step_um))
 
     dn_dw = (wide - narrow) / (2.0 * half_step_um)
     dn_dh = (tall - short) / (2.0 * half_step_um)
@@ -106,6 +127,8 @@ def measure(cross_section: CrossSection,
         dn_eff_d_height_per_um=dn_dh,
         dlambda_d_width_pm_per_nm=scale * dn_dw,
         dlambda_d_height_pm_per_nm=scale * dn_dh,
+        offset_averaged=offset_averaged,
+        alignment_swing=swing,
     )
 
 

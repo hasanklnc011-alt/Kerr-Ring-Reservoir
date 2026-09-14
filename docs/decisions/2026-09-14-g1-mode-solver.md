@@ -1,5 +1,14 @@
 # G1 — mode solver sağlık kontrolü: kök neden eksik subpixel ortalaması
 
+> **DÜZELTME 2026-09-15:** Aşağıdaki "dört kapı da geçti" sonucu **tek bir grid
+> hizalamasında** ölçülmüştür. Hizalama ekseni test edilmemişti ve orada etki
+> `1.4e-2` — mesh kapısının 14 katı. Mesh inceltmek bunu çözmüyor (salınım
+> `dl` 2.5 kat inerken yalnız 1.87 kat düşüp duruyor). Üretim değeri artık
+> **dört ofsetin ortalamasıdır**. Bkz.
+> [hücre-altı hizalama kararı](2026-09-15-g1-subcell-alignment.md).
+> Özgün metin tarihçe olarak korunmuştur.
+
+
 - Durum: **KAPALI (GEÇTİ)**, 2026-09-14.
 - Sahip: Claude (kod/test).
 - Rapor: [studies/plan2-kerr/G1-MODE-DIAGNOSTIC.md](../../studies/plan2-kerr/G1-MODE-DIAGNOSTIC.md)
