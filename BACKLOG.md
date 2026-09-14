@@ -36,8 +36,10 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
   Si₃N₄ ve AlGaAsOI adaylarının ikisinde de bölge **boş**; ikisi de ~7 slot
   veya ~3.6 sembol derinlik taşıyabiliyor.
 - Kanıt: `tests/plan2_kerr/` 41/41; `python -m plan2_kerr.screen --boundary`.
-- Açık: `ε` gürültü modeli olmadan keyfî (P2'ye taşındı); termal kayma
-  `α_abs` ve `R_th` olmadan hesaplanamıyor (P1/K2a).
+- Açık halka **KAPANDI** 2026-09-14: `ε` gürültü tabanından ölçüldü
+  ([karar](docs/decisions/2026-09-14-retention-noise-floor.md)); `1/e` iki-üç
+  mertebe fazla katıymış, çalışma değeri `1e-2`. `Q_i` talebi 3.89e6 → 8.44e5.
+- Hâlâ açık: termal kayma `α_abs` ve `R_th` olmadan hesaplanamıyor (P1).
 
 ## [SLOT] Slot/port bütçesi kararı
 - Sahip: Claude (analiz); karar Hasan

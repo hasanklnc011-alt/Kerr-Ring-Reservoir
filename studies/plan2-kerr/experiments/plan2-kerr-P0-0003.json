@@ -1,0 +1,182 @@
+{
+  "artifacts": [
+    {
+      "note": "",
+      "path": "studies/plan2-kerr/BENCHMARK-PROTOCOL.md",
+      "role": "input",
+      "sha256": "f665d980acdfb4e7f05d305e69ccee56512ab439a077c73399054205e6ccc693"
+    },
+    {
+      "note": "",
+      "path": "studies/plan2-kerr/PLATFORM-EVIDENCE.md",
+      "role": "input",
+      "sha256": "3c1777b9b8dd39b82ce4b3a03a23660b27a6037bc61be6c54f71eae2ef456247"
+    },
+    {
+      "note": "",
+      "path": "studies/plan2-kerr/README.md",
+      "role": "input",
+      "sha256": "01f9d45d8795a9f471d6309c40fc31d70380f37b9a990690549b734ed797f161"
+    },
+    {
+      "note": "",
+      "path": "docs/decisions/2026-09-14-plan2-kerr-reservoir.md",
+      "role": "input",
+      "sha256": "2303e152846f87383a82a714f3048ad34de6683295cefb040d43eab907b6801e"
+    },
+    {
+      "note": "",
+      "path": "docs/decisions/2026-09-14-slot-count.md",
+      "role": "input",
+      "sha256": "434123f3249df0328c1f50308325d47bacedc254c3bce5c999d5d270963a76ab"
+    },
+    {
+      "note": "",
+      "path": "plan2_kerr/readout_contract.py",
+      "role": "input",
+      "sha256": "ab3631f8fd9d121dbbe9e2037d201ad0ed025e5a4ae8c661d58e3121d6505526"
+    },
+    {
+      "note": "",
+      "path": "manifests/narma10/dev_seeds.sha256.json",
+      "role": "input",
+      "sha256": "97242b728a0b36afc72c6e873f6d82d26887267352696657fb064ef1778d4ab1"
+    },
+    {
+      "note": "",
+      "path": "manifests/narma10/blind_seeds.sha256.json",
+      "role": "input",
+      "sha256": "e59b7f337465da85befdd03b587fc4e686c282aed1d5c45b765256c2e1f0a1a6"
+    }
+  ],
+  "benchmark": {
+    "acceptance": {
+      "median_nmse": 0.05,
+      "min_seeds_under_target": 8
+    },
+    "blind_manifest_digest": "6cc96caac8f6244207e4f0d2c82cea2c5ad6138c25ebc5a9e8ebddd3d78eb4ea",
+    "blind_seeds": 10,
+    "dev_manifest_digest": "1b865944b5f99eeb8f408121760fe0f5f178b7eb58aae24e47401c7bdd13d482",
+    "dev_seeds": 5,
+    "shared": "benchmark and blind suite are shared, never copied",
+    "split": [
+      200,
+      3000,
+      2000
+    ],
+    "task": "NARMA-10"
+  },
+  "command": "python scripts/record_p0.py",
+  "created_utc": "2026-09-14T16:50:25Z",
+  "experiment_id": "plan2-kerr-P0-0003",
+  "gates": [
+    {
+      "detail": "studies/plan2-kerr/ with protocol and evidence format",
+      "name": "workspace",
+      "passed": true,
+      "threshold": "present",
+      "value": "present"
+    },
+    {
+      "detail": "append-only, hash-verified",
+      "name": "experiment_id_scheme",
+      "passed": true,
+      "threshold": "plan2-kerr-P<n>-<####>",
+      "value": "plan2-kerr-experiment/1"
+    },
+    {
+      "detail": "8 slots x 4 ports",
+      "name": "readout_locked",
+      "passed": true,
+      "threshold": 32,
+      "value": 32
+    },
+    {
+      "detail": "reserve-before-scoring, single use",
+      "name": "blind_safety",
+      "passed": true,
+      "threshold": "G0 closed",
+      "value": "G0 closed"
+    }
+  ],
+  "git": {
+    "commit": "8e9f98b256711e80bb84f71c97d62776044b7afd",
+    "dirty": true
+  },
+  "notes": [
+    "P0 documentation alone is not technical acceptance (ADR section 2).",
+    "Material inputs are unresolved; P1 owns the sourced table.",
+    "epsilon = 1/e is still a modelling choice, not a measured threshold.",
+    "Earlier P0 records are superseded, not edited: each hashed the protocol documents as they stood at the time."
+  ],
+  "parameters": [
+    {
+      "name": "memory_depth",
+      "note": "",
+      "source": "NARMA-10 task definition",
+      "status": "synthetic",
+      "unit": "symbols",
+      "value": 10
+    },
+    {
+      "name": "drive_bandwidth",
+      "note": "",
+      "source": "P1 open: no sourced modulator/detector figure yet",
+      "status": "unresolved",
+      "unit": "Hz",
+      "value": 50000000000.0
+    },
+    {
+      "name": "retention_epsilon",
+      "note": "",
+      "source": "modelling choice; needs a noise/ADC model (G2 open item)",
+      "status": "unresolved",
+      "unit": "1",
+      "value": 0.36787944117144233
+    },
+    {
+      "name": "wavelength",
+      "note": "",
+      "source": "design choice, telecom band",
+      "status": "synthetic",
+      "unit": "m",
+      "value": 1.55e-06
+    }
+  ],
+  "passed": true,
+  "phase": 0,
+  "readout": {
+    "decision": "docs/decisions/2026-09-14-slot-count.md",
+    "digital_taps": 0,
+    "max_loss_db_per_cm": 0.41695511899769006,
+    "n_features": 32,
+    "ports": 4,
+    "q_floor": 422224.248521624,
+    "q_intrinsic_required": 844448.497043248,
+    "q_intrinsic_required_at_1_over_e": 3888829.042186019,
+    "retention": 0.01,
+    "retention_decision": "docs/decisions/2026-09-14-retention-noise-floor.md",
+    "ridge_selection": "train_inner_split",
+    "sampling": "slot_end",
+    "slots": 8,
+    "symbol_time_s": 1.6e-10
+  },
+  "schema": "plan2-kerr-experiment/1",
+  "supersedes": "plan2-kerr-P0-0002",
+  "title": "Plan 2 Kerr workspace, benchmark protocol and readout contract",
+  "tools": {
+    "executable": "C:\\Users\\hasan\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+    "numpy": "2.4.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7",
+    "scipy": "1.18.0",
+    "tidy3d": "2.12.0",
+    "xarray": "2026.4.0"
+  },
+  "uncertainty_method": "none - this record contains no measurement",
+  "unresolved_inputs": [
+    "drive_bandwidth",
+    "retention_epsilon"
+  ],
+  "validity": "Applies to the Plan 2 Kerr line only. Fixes task, readout, controls, gates and record format; fixes no physics."
+}

@@ -36,8 +36,12 @@ Bu, Plan 2 ADR §4'ün `20 × 2 = 40` sayısını değiştirir; gerekçe slot/po
 karar kaydındadır. Maske dizisi ve seed'i ilk skordan **önce** kilitlenir ve
 tüm mimarilerde aynıdır.
 
-Fiziksel sonuçları (`m=10`, `B=50 GHz`, `ε=1/e`, `n_g=2.0`, kritik kuplaj):
-`T_sym = 160 ps`, `Q_floor = 1.94e6`, `Q_i ≥ 3.89e6`, kayıp `≤ 0.091 dB/cm`.
+Fiziksel sonuçları (`m=10`, `B=50 GHz`, `n_g=2.0`, kritik kuplaj,
+`ε = 1e-2` [gürültü tabanından ölçüldü](../../docs/decisions/2026-09-14-retention-noise-floor.md)):
+`T_sym = 160 ps`, `Q_floor = 4.22e5`, `Q_i ≥ 8.44e5`, kayıp `≤ 0.417 dB/cm`.
+
+G2'nin yer tutucu `ε = 1/e` değeriyle bu sayılar `1.94e6 / 3.89e6 / 0.091 dB/cm`
+idi; `plan2_kerr/readout_contract.py` ikisini de tutuyor.
 
 ## 3. Kontroller
 

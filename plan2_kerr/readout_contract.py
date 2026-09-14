@@ -7,7 +7,8 @@ Why these numbers, in one line each:
 
 * **8 slots** — the memory floor is linear in the slot count and blind to the
   port count (:mod:`plan2_kerr.memory_triangle`), so slots are the expensive
-  axis. 8 slots put the requirement at ``Q_i >= 3.89e6``.
+  axis. With the measured retention this puts the requirement at
+  ``Q_i >= 8.44e5`` (it was ``3.89e6`` under G2's placeholder ``1/e``).
 * **4 ports** — the features cut from the slot axis come back here for free in
   the memory constraint. 4 is what a two-ring device can plausibly offer:
   through and drop of each ring.
@@ -24,6 +25,7 @@ from __future__ import annotations
 from benchmarks.narma10_np.candidate_lock import ReadoutContract
 
 from .memory_triangle import TriangleRequest
+from .noise_floor import STRICT_RETENTION, WORKING_RETENTION
 from .slot_decision import configuration
 
 #: Mask slots per symbol. The memory floor scales with this.
@@ -44,15 +46,28 @@ DIGITAL_TAPS = 0
 #: Ridge regularisation is chosen inside the training window only.
 RIDGE_SELECTION = "train_inner_split"
 
-#: Physics consequences of this choice, at the G2 reference request
-#: (m=10, B=50 GHz, eps=1/e, 1550 nm, n_g=2.0, critical coupling).
-#: Derived, never hand-copied, so the contract cannot drift from the model.
-_REFERENCE = configuration(N_SLOTS, N_PORTS, TriangleRequest())
+#: Physics consequences of this choice (m=10, B=50 GHz, 1550 nm, n_g=2.0,
+#: critical coupling). Derived, never hand-copied, so the contract cannot
+#: drift from the model.
+#:
+#: The retention is :data:`plan2_kerr.noise_floor.WORKING_RETENTION` = 1e-2,
+#: measured against the detection noise floor. G2's original ``1/e`` is kept
+#: alongside as ``*_STRICT`` so the earlier numbers stay readable.
+_WORKING = configuration(N_SLOTS, N_PORTS,
+                         TriangleRequest(retention=WORKING_RETENTION))
+_STRICT = configuration(N_SLOTS, N_PORTS,
+                        TriangleRequest(retention=STRICT_RETENTION))
 
-Q_FLOOR = _REFERENCE.q_floor
-Q_INTRINSIC_REQUIRED = _REFERENCE.q_intrinsic_required
-MAX_LOSS_DB_PER_CM = _REFERENCE.max_loss_db_per_cm
-SYMBOL_TIME_S = _REFERENCE.symbol_time_s
+RETENTION = WORKING_RETENTION
+
+Q_FLOOR = _WORKING.q_floor
+Q_INTRINSIC_REQUIRED = _WORKING.q_intrinsic_required
+MAX_LOSS_DB_PER_CM = _WORKING.max_loss_db_per_cm
+SYMBOL_TIME_S = _WORKING.symbol_time_s
+
+Q_FLOOR_STRICT = _STRICT.q_floor
+Q_INTRINSIC_REQUIRED_STRICT = _STRICT.q_intrinsic_required
+MAX_LOSS_DB_PER_CM_STRICT = _STRICT.max_loss_db_per_cm
 
 
 def contract() -> ReadoutContract:
@@ -77,8 +92,11 @@ def summary() -> dict:
         "digital_taps": DIGITAL_TAPS,
         "ridge_selection": RIDGE_SELECTION,
         "symbol_time_s": SYMBOL_TIME_S,
+        "retention": RETENTION,
         "q_floor": Q_FLOOR,
         "q_intrinsic_required": Q_INTRINSIC_REQUIRED,
         "max_loss_db_per_cm": MAX_LOSS_DB_PER_CM,
+        "q_intrinsic_required_at_1_over_e": Q_INTRINSIC_REQUIRED_STRICT,
         "decision": "docs/decisions/2026-09-14-slot-count.md",
+        "retention_decision": "docs/decisions/2026-09-14-retention-noise-floor.md",
     }

@@ -223,13 +223,22 @@ class ReadoutContractTest(unittest.TestCase):
     def test_physics_numbers_are_derived_from_the_model(self):
         from plan2_kerr.memory_triangle import TriangleRequest
         from plan2_kerr.slot_decision import configuration
-        ref = configuration(rc.N_SLOTS, rc.N_PORTS, TriangleRequest())
+        ref = configuration(rc.N_SLOTS, rc.N_PORTS,
+                            TriangleRequest(retention=rc.RETENTION))
         self.assertAlmostEqual(rc.Q_FLOOR, ref.q_floor)
         self.assertAlmostEqual(rc.MAX_LOSS_DB_PER_CM, ref.max_loss_db_per_cm)
 
+    def test_strict_numbers_are_derived_too(self):
+        from plan2_kerr.memory_triangle import TriangleRequest
+        from plan2_kerr.slot_decision import configuration
+        from plan2_kerr.noise_floor import STRICT_RETENTION
+        ref = configuration(rc.N_SLOTS, rc.N_PORTS,
+                            TriangleRequest(retention=STRICT_RETENTION))
+        self.assertAlmostEqual(rc.Q_FLOOR_STRICT, ref.q_floor)
+
     def test_beats_the_nominal_plan2_requirement(self):
         from plan2_kerr.memory_triangle import TriangleRequest
-        nominal = TriangleRequest().q_floor      # 20 slots
+        nominal = TriangleRequest().q_floor      # 20 slots, 1/e retention
         self.assertLess(rc.Q_FLOOR, nominal / 2)
 
     def test_meets_the_realistic_physics_feature_target(self):

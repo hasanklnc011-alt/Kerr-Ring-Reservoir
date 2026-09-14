@@ -36,15 +36,20 @@ MANIFESTS = (
 )
 
 
-SUPERSEDES = "plan2-kerr-P0-0001"
-"""P0-0001 was written before the workspace README and the Plan 2 ADR
-amendment were final, so its hashes no longer match. Records are append-only:
-it is superseded here, not edited."""
+def _latest_p0(record_dir: Path) -> str | None:
+    """The newest existing P0 record, which this run supersedes.
+
+    Records are append-only: when a protocol document changes, the old record
+    is not edited, it is replaced by a new one that names it here.
+    """
+    existing = sorted(record_dir.glob("plan2-kerr-P0-*.json"))
+    return existing[-1].stem if existing else None
 
 
 def main() -> int:
-    experiment_id = prov.next_id(0, REPO_ROOT / prov.DEFAULT_RECORD_DIR)
-    supersedes = SUPERSEDES if experiment_id != SUPERSEDES else None
+    record_dir = REPO_ROOT / prov.DEFAULT_RECORD_DIR
+    supersedes = _latest_p0(record_dir)
+    experiment_id = prov.next_id(0, record_dir)
 
     artifacts = [prov.artifact(REPO_ROOT / p, "input", repo_root=REPO_ROOT)
                  for p in DOCS + MANIFESTS]
@@ -100,12 +105,12 @@ def main() -> int:
             "P0 documentation alone is not technical acceptance (ADR section 2).",
             "Material inputs are unresolved; P1 owns the sourced table.",
             "epsilon = 1/e is still a modelling choice, not a measured threshold.",
-            "P0-0001 is superseded: it hashed the protocol documents before "
-            "the workspace README and the Plan 2 ADR amendment were final.",
+            "Earlier P0 records are superseded, not edited: each hashed the "
+            "protocol documents as they stood at the time.",
         ],
     )
 
-    path = prov.write_record(record, REPO_ROOT / prov.DEFAULT_RECORD_DIR)
+    path = prov.write_record(record, record_dir)
     print(f"wrote {path.relative_to(REPO_ROOT)}")
     print(record.format_text())
     return 0

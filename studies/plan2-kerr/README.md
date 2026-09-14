@@ -24,6 +24,7 @@ Hiçbir fiziksel kapı geçilmedi; hiçbir ücretli solve yapılmadı.
 - [MEMORY-TRIANGLE.md](MEMORY-TRIANGLE.md) — G2: `Q_floor` türetimi ve platform taraması
 - [SLOT-DECISION.md](SLOT-DECISION.md) — slot/port bütçesi ve ESN referans eğrisi
 - [G1-MODE-DIAGNOSTIC.md](G1-MODE-DIAGNOSTIC.md) — mode solver kök nedeni ve kapı
+- [RETENTION-NOISE-FLOOR.md](RETENTION-NOISE-FLOOR.md) — `ε`'un gürültü tabanından ölçümü
 
 ## Kilitli readout
 
@@ -31,8 +32,9 @@ Tek doğru kaynak `plan2_kerr/readout_contract.py`:
 **8 mask slotu × 4 fiziksel port = 32 özellik**, slot sonu örnekleme,
 dijital tap yok, ridge yalnız train iç ayrımından.
 
-Fiziksel sonucu: `T_sym = 160 ps`, `Q_floor = 1.94e6`, `Q_i ≥ 3.89e6`,
-kayıp `≤ 0.091 dB/cm` (`n_g = 2.0`, kritik kuplaj).
+Fiziksel sonucu (`ε = 1e-2`, gürültü tabanından ölçüldü):
+`T_sym = 160 ps`, `Q_floor = 4.22e5`, `Q_i ≥ 8.44e5`, kayıp `≤ 0.417 dB/cm`
+(`n_g = 2.0`, kritik kuplaj).
 
 ## Deney kayıtları
 
