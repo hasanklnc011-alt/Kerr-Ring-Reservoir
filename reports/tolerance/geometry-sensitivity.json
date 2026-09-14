@@ -1,0 +1,46 @@
+{
+  "environment": {
+    "extras_installed": true,
+    "extras_version": "2.11.2",
+    "numpy": "2.4.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7",
+    "reason": "subpixel-averaged solve succeeded and changed the result",
+    "subpixel_available": true,
+    "subpixel_effect": 0.11719679819117035,
+    "tidy3d": "2.11.2"
+  },
+  "q_loaded_strict": 1944414.5210930095,
+  "q_loaded_working": 422224.248521624,
+  "schema": "mrr-geometry-sensitivity/1",
+  "sensitivities": [
+    {
+      "cross_section": "Si-450x220",
+      "dlambda_d_height_pm_per_nm": 1948.1287344114487,
+      "dlambda_d_width_pm_per_nm": 894.1608800318888,
+      "dn_eff_d_height_per_um": 5.212854394293975,
+      "dn_eff_d_width_per_um": 2.3926193327712397,
+      "half_step_nm": 1.0,
+      "height_linewidths_per_nm_working": 530.6756070388751,
+      "n_eff": 2.3539288709317336,
+      "n_group": 4.14753099650609,
+      "steps_per_wvl": 26,
+      "width_linewidths_per_nm_working": 243.57187459928923
+    },
+    {
+      "cross_section": "SiN-1200x800",
+      "dlambda_d_height_pm_per_nm": 190.69717729000953,
+      "dlambda_d_width_pm_per_nm": 92.79639666464492,
+      "dn_eff_d_height_per_um": 0.2575875574906128,
+      "dn_eff_d_width_per_um": 0.12534636065653082,
+      "half_step_nm": 1.0,
+      "height_linewidths_per_nm_working": 51.946433791270444,
+      "n_eff": 1.8023834248574824,
+      "n_group": 2.0936896905571913,
+      "steps_per_wvl": 26,
+      "width_linewidths_per_nm_working": 25.2779928046737
+    }
+  ],
+  "subpixel_active": true,
+  "wavelength_nm": 1550.0
+}

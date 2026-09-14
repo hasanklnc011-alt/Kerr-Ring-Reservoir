@@ -88,7 +88,18 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 
 ## [P5] Dayanıklılık — 0 FC
 - Durum: OPEN; bağımlılık P3, P4
-- İş ve kabul: Plan 2 ADR §7.
+- İş ve kabul: Plan 2 ADR §7 (64 ön kayıtlı senaryo, ≥%90'ında beş-seed medyan <0.05).
+- **Senaryo tasarımı başladı:** [P5-SCENARIO-DESIGN.md](studies/plan2-kerr/P5-SCENARIO-DESIGN.md)
+  (TASLAK), kayıt `plan2-kerr-P5-0001`, ham veri `reports/tolerance/geometry-sensitivity.json`.
+- Ölçülen (EM-supported, G1 solver, subpixel açık): `dλ/dw` Si 894.2 pm/nm,
+  SiN 92.8 pm/nm; `dλ/dh` Si 1948.1, SiN 190.7. Çalışma `Q_L`'de 1 nm genişlik
+  hatası SiN'de **25.3 linewidth**, Si'de 243.6.
+- Sonuçlar: (a) `ε` gevşemesi toleransı 4.6 kat rahatlatıyor; (b) buna rağmen
+  aktif trim mimarinin parçası, opsiyon değil; (c) SiN Si'den ~9.6 kat az
+  hassas — G1'in veremediği **fiziksel** platform argümanı.
+- Dondurma için gereken: P1 proses/malzeme aralıkları, gap → `κ` hassasiyeti
+  (ölçülmedi), P2/P3 çalışma noktası.
+- Trim bütçesi hesaplanamıyor: termo-optik ayar verimliliği `unresolved` (P1).
 
 ## [P6] 3B EM ve nihai kör test
 - Durum: OPEN; bağımlılık P5, B25
