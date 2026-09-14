@@ -1,0 +1,4 @@
+# G1 local eigenmode diagnostic environment (direct dependencies only).
+# Install into an isolated venv; see requirements/README.md.
+tidy3d==2.12.0
+tidy3d-extras==2.12.0

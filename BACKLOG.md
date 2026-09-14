@@ -1,6 +1,6 @@
 # Backlog
 
-Kanonik sıra: **G0 ✓ → G2 ✓ → G1 → P0 → P1 …**
+Kanonik sıra: **G0 ✓ → G2 ✓ → G1 (kök neden ✓, kapı açık) → P0 → P1 …**
 Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 [migrasyon](docs/decisions/2026-09-14-repo-migration.md). Geçmiş: `BACKLOGLOG.md`.
 
@@ -14,18 +14,18 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 
 ## [G1] Mode solver sağlığı — Si vs SiN
 - Sahip: Claude
-- Durum: OPEN
-- Bağımlılık: yok (G0 ile paralel yürüyebilir)
-- İş: Tek tanı modülü; izole ve sürüm-kilitli ortam; local subpixel zorunlu,
-  sessiz fallback yasak. 16/20/26/32 step/λ; Ex/Ey/Ez örnekleri; aynı grid'de
-  ±1e-12 µm öteleme testi; TE/çekirdek/parity/örtüşme tabanlı mod seçici
-  (en yüksek `n_eff`'e fallback yok). Aynı koşu Si (450×220 nm) ve SiN
-  kesitinde tekrarlanır.
-- Kabul: öteleme `|Δn_eff| < 1e-5`; son iki mesh `|Δn_eff| < 1e-3`;
-  `n_g` değişimi `< %1`; mod örtüşmesi `> 0.99`.
-- Karar çıktısı: SiN geçip Si geçmezse kök neden indeks kontrastıdır ve
-  platform değişimi gerekçelenir. İkisi de geçmezse araç Plan 2'de
-  kullanılamaz; P4 yeniden tasarlanır.
+- Durum: **KISMEN KAPALI** 2026-09-14 — [karar kaydı](docs/decisions/2026-09-14-g1-mode-solver.md),
+  [rapor](studies/plan2-kerr/G1-MODE-DIAGNOSTIC.md)
+- Kök neden bulundu: `GridSpec.auto` grid çizgilerini yapı sınırlarına yaslıyor;
+  subpixel yokken arayüz atamasını `1e-12 µm` öteleme topluca çeviriyor. Uniform
+  grid'de etki kayboluyor ve `n_eff` monoton yakınsıyor. Mode solver reddedilmemeli.
+- Kontrast ikincil: yayılımı 3.8 kat ölçekliyor ama auto grid'de etki SiN'de de var.
+  **Plan 2'nin platform değişimi bu bulguyla gerekçelenmiyor.**
+- Kanıt: `tests/fdtd/` 36/36; `reports/g1/*.json`.
+- **AÇIK:** kapı kapanmadı. `libomp140.x86_64.dll` (LLVM OpenMP) makinede yok,
+  bu yüzden local subpixel çalışmıyor ve iki koşu da `gate_valid: false`.
+  Sıradaki adım: DLL'i güvenilir kaynaktan edin (Hasan'ın ortam kararı), sonra
+  aynı merdiveni subpixel ile koş.
 
 ## [G2] Kerr bellek üçgeni
 - Sahip: Claude

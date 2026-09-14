@@ -1,0 +1,127 @@
+"""G1 mode diagnostic CLI.
+
+    python -m fdtd.modes env
+    python -m fdtd.modes diagnose --output reports/g1/mode-diagnostic.json
+    python -m fdtd.modes diagnose --allow-no-subpixel     # inconclusive by design
+
+``diagnose`` requires local subpixel averaging and stops without it. The
+override exists so a blocked environment can still produce a *labelled*
+inconclusive record; it never turns such a run into a passing gate.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+from . import diagnose as diag_mod
+from .environment import (
+    EnvironmentReport,
+    SubpixelUnavailable,
+    enable_local_subpixel,
+    probe_local_subpixel,
+)
+
+
+def cmd_env(args: argparse.Namespace) -> int:
+    report = probe_local_subpixel()
+    print(json.dumps(report.to_dict(), indent=2, sort_keys=True)
+          if args.json else report.format_text())
+    return 0 if report.subpixel_available else 1
+
+
+def _resolve_subpixel(allow_no_subpixel: bool) -> tuple[bool, EnvironmentReport]:
+    report = probe_local_subpixel()
+    if report.subpixel_available:
+        enable_local_subpixel(True)
+        return True, report
+    if not allow_no_subpixel:
+        raise SubpixelUnavailable(
+            report.reason
+            + "\nG1 cannot be decided without local subpixel averaging. "
+              "Re-run with --allow-no-subpixel to record an explicitly "
+              "inconclusive diagnostic."
+        )
+    enable_local_subpixel(False)
+    return False, report
+
+
+def cmd_diagnose(args: argparse.Namespace) -> int:
+    try:
+        subpixel, env_report = _resolve_subpixel(args.allow_no_subpixel)
+    except SubpixelUnavailable as exc:
+        print(f"BLOCKED: {exc}")
+        return 3
+
+    meshes = tuple(int(m) for m in args.meshes.split(","))
+    names = (args.cross_section.split(",") if args.cross_section
+             else sorted(diag_mod.CROSS_SECTIONS))
+
+    diagnostics = []
+    for name in names:
+        cs = diag_mod.cross_section_by_name(name)
+        print(f"solving {cs.name} on the {args.grid} grid ...", flush=True)
+        diagnostics.append(diag_mod.run(
+            cs, meshes=meshes, grid_mode=args.grid, wavelength_um=args.wavelength,
+            subpixel=subpixel, environment=env_report.to_dict(),
+        ))
+
+    print()
+    for d in diagnostics:
+        print(d.format_text())
+        print()
+
+    comparison = diag_mod.contrast_comparison(diagnostics)
+    print("contrast comparison")
+    for row in comparison["rows"]:
+        print(f"  {row['cross_section']:<16} [{row.get('grid_mode','?')}] "
+              f"dn={row['index_contrast']:.3f}  "
+              f"worst shift dn_eff={row['worst_shift_delta_n_eff']:.3e}  "
+              f"mesh spread={row['mesh_spread_n_eff']:.3e}")
+    print(f"  -> {comparison['verdict']}")
+
+    if args.output:
+        path = diag_mod.write_report(diagnostics, Path(args.output))
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["contrast_comparison"] = comparison
+        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n",
+                        encoding="utf-8")
+        print(f"\nwrote {path}")
+
+    if not subpixel:
+        return 4  # inconclusive, by construction
+    return 0 if all(d.passed for d in diagnostics) else 1
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(prog="fdtd.modes")
+    sub = p.add_subparsers(dest="command", required=True)
+
+    e = sub.add_parser("env", help="report whether local subpixel is usable")
+    e.add_argument("--json", action="store_true")
+    e.set_defaults(func=cmd_env)
+
+    d = sub.add_parser("diagnose", help="run the G1 mesh/shift ladder")
+    d.add_argument("--cross-section", default=None,
+                   help="comma-separated names; default: all")
+    d.add_argument("--meshes", default=",".join(str(m) for m in diag_mod.DEFAULT_MESHES))
+    d.add_argument("--grid", choices=("uniform", "auto"), default="uniform",
+                   help="uniform: structure-independent. auto: tidy3d snaps grid "
+                        "lines to structure boundaries")
+    d.add_argument("--wavelength", type=float, default=1.55)
+    d.add_argument("--output", default=None)
+    d.add_argument("--allow-no-subpixel", action="store_true",
+                   help="record an explicitly inconclusive run")
+    d.set_defaults(func=cmd_diagnose)
+
+    return p
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

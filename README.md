@@ -15,7 +15,7 @@ tamamı geri çekilmiştir; bkz. [docs/inherited/OPTICAL-PARAMETER-STATUS.md](do
 | Kapı | Konu | Durum |
 |---|---|---|
 | G0 | Kör-test güvenliği (devralınan bug'lar) | **CLOSED** 2026-09-14 |
-| G1 | Mode solver sağlık kontrolü: SiN vs Si `n_eff` yakınsaması | OPEN |
+| G1 | Mode solver sağlık kontrolü: SiN vs Si `n_eff` yakınsaması | kök neden bulundu; kapı **OPEN** (`libomp140` eksik) |
 | G2 | Kerr bellek üçgeni: `Q` – `T_sym` – güç fizibilitesi | **CLOSED** 2026-09-14 |
 | P0–P6 | Plan 2 ADR aşamaları | OPEN |
 
@@ -40,6 +40,8 @@ bir kez tüketilir. Başarısızlık, nedenleriyle birlikte geçerli araştırma
 - `docs/inherited/` — eski depodan devralınan kanıt ve geri çekme kayıtları (tarihçe, talimat değil)
 - `reports/FLEXCREDIT-LEDGER.md` — ortak bütçe defteri
 - `plan2_kerr/` — G2 bellek üçgeni modeli ve tarama CLI'ı
+- `fdtd/modes/` — G1 eigenmode tanı hattı ve ortam kapısı
+- `requirements/` — izole mode-solver ortamı ve kilidi
 - `studies/` — hat çalışma alanları ve raporlar
 
 ## Çalıştırma
@@ -47,5 +49,7 @@ bir kez tüketilir. Başarısızlık, nedenleriyle birlikte geçerli araştırma
 ```bash
 python -m tests.narma10_np.run_tests    # benchmark + kör yol güvenliği (122)
 python -m tests.plan2_kerr.run_tests    # G2 bellek üçgeni (41)
+python -m tests.fdtd.run_tests          # G1 mode tanısı (36)
 python -m plan2_kerr.screen --boundary  # G2 taraması
+./.venv-mode/Scripts/python.exe -m fdtd.modes env   # G1 ortam kapısı
 ```

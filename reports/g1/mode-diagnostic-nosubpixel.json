@@ -1,0 +1,251 @@
+{
+  "contrast_comparison": {
+    "mesh_spread_ratio_high_over_low": 3.773645977962573,
+    "rows": [
+      {
+        "cross_section": "SiN-1200x800",
+        "index_contrast": 0.552,
+        "mesh_spread_n_eff": 0.007398698595204589,
+        "worst_shift_delta_n_eff": 2.444983371230336e-05
+      },
+      {
+        "cross_section": "Si-450x220",
+        "index_contrast": 2.036,
+        "mesh_spread_n_eff": 0.027920069195951136,
+        "worst_shift_delta_n_eff": 0.0
+      }
+    ],
+    "shift_ratio_high_over_low": 0.0,
+    "verdict": "sensitivity grows with contrast (consistent with interface classification)"
+  },
+  "diagnostics": [
+    {
+      "cross_section": {
+        "box_index": 1.444,
+        "clad_index": 1.444,
+        "core_index": 3.48,
+        "height_um": 0.22,
+        "index_contrast": 2.036,
+        "name": "Si-450x220",
+        "note": "inherited silicon recovery geometry; dn ~ 2.04",
+        "width_um": 0.45
+      },
+      "environment": {
+        "extras_installed": true,
+        "extras_version": "2.12.0",
+        "numpy": "2.4.6",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "python": "3.14.7",
+        "reason": "tidy3d_extras native worker will not load: ImportError('DLL load failed while importing _isolated_extension: Belirtilen mod\u00fcl bulunamad\u0131.'); local subpixel would fail at solve time",
+        "subpixel_available": false,
+        "tidy3d": "2.12.0"
+      },
+      "errors": [],
+      "gate_valid": false,
+      "gates": [
+        {
+          "detail": "worst at 16 steps/wvl; physics cannot move under a 1e-12 um offset",
+          "name": "shift",
+          "passed": true,
+          "threshold": 1e-05,
+          "value": 0.0
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "mesh",
+          "passed": false,
+          "threshold": 0.001,
+          "value": 0.006373281084718574
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "group_index",
+          "passed": true,
+          "threshold": 0.01,
+          "value": 0.0018257373129552878
+        },
+        {
+          "detail": "worst of shift-pair and mesh-pair overlaps",
+          "name": "overlap",
+          "passed": true,
+          "threshold": 0.99,
+          "value": 0.9995265801089432
+        }
+      ],
+      "mesh_overlaps": [
+        0.9996268340792459,
+        0.9995265801089432,
+        0.9998475017710445
+      ],
+      "passed": false,
+      "points": [
+        {
+          "core_confinement": 0.6067767642813354,
+          "grid_step_um": 0.027837643678160922,
+          "mode_index": 0,
+          "n_eff": 2.299468913968731,
+          "n_eff_shifted": 2.299468913968731,
+          "n_group": 4.099438728106456,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 16,
+          "te_fraction": 0.9823957717001331
+        },
+        {
+          "core_confinement": 0.6057123515282548,
+          "grid_step_um": 0.02227011494252874,
+          "mode_index": 0,
+          "n_eff": 2.3107276985803584,
+          "n_eff_shifted": 2.3107276985803584,
+          "n_group": 4.111045742966054,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 0.9999999999999998,
+          "steps_per_wvl": 20,
+          "te_fraction": 0.9813061308512706
+        },
+        {
+          "core_confinement": 0.604248676714135,
+          "grid_step_um": 0.01713085764809903,
+          "mode_index": 0,
+          "n_eff": 2.3210157020799635,
+          "n_eff_shifted": 2.3210157020799635,
+          "n_group": 4.122548979029748,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 0.9999999999999997,
+          "steps_per_wvl": 26,
+          "te_fraction": 0.9802193661231351
+        },
+        {
+          "core_confinement": 0.6030686880637588,
+          "grid_step_um": 0.013918821839080461,
+          "mode_index": 0,
+          "n_eff": 2.327388983164682,
+          "n_eff_shifted": 2.327388983164682,
+          "n_group": 4.130075670525248,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 32,
+          "te_fraction": 0.9794976101040203
+        }
+      ],
+      "schema": "mrr-mode-diagnostic/2",
+      "subpixel_active": false,
+      "wavelength_um": 1.55
+    },
+    {
+      "cross_section": {
+        "box_index": 1.444,
+        "clad_index": 1.444,
+        "core_index": 1.996,
+        "height_um": 0.8,
+        "index_contrast": 0.552,
+        "name": "SiN-1200x800",
+        "note": "conventional thick-film Si3N4; dn ~ 0.55",
+        "width_um": 1.2
+      },
+      "environment": {
+        "extras_installed": true,
+        "extras_version": "2.12.0",
+        "numpy": "2.4.6",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "python": "3.14.7",
+        "reason": "tidy3d_extras native worker will not load: ImportError('DLL load failed while importing _isolated_extension: Belirtilen mod\u00fcl bulunamad\u0131.'); local subpixel would fail at solve time",
+        "subpixel_available": false,
+        "tidy3d": "2.12.0"
+      },
+      "errors": [],
+      "gate_valid": false,
+      "gates": [
+        {
+          "detail": "worst at 32 steps/wvl; physics cannot move under a 1e-12 um offset",
+          "name": "shift",
+          "passed": false,
+          "threshold": 1e-05,
+          "value": 2.444983371230336e-05
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "mesh",
+          "passed": false,
+          "threshold": 0.001,
+          "value": 0.00374603091986514
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "group_index",
+          "passed": true,
+          "threshold": 0.01,
+          "value": 0.0005840580429024722
+        },
+        {
+          "detail": "worst of shift-pair and mesh-pair overlaps",
+          "name": "overlap",
+          "passed": true,
+          "threshold": 0.99,
+          "value": 0.9984518763313879
+        }
+      ],
+      "mesh_overlaps": [
+        0.9996806455516812,
+        0.9984518763313879,
+        0.9992804221684208
+      ],
+      "passed": false,
+      "points": [
+        {
+          "core_confinement": 0.8578844848343555,
+          "grid_step_um": 0.048534569138276556,
+          "mode_index": 0,
+          "n_eff": 1.7959058235369363,
+          "n_eff_shifted": 1.7959058235369363,
+          "n_group": 2.0966093521817775,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 16,
+          "te_fraction": 0.9984273563236357
+        },
+        {
+          "core_confinement": 0.8637038898402476,
+          "grid_step_um": 0.03882765531062124,
+          "mode_index": 0,
+          "n_eff": 1.8033045221321409,
+          "n_eff_shifted": 1.8033045221321409,
+          "n_group": 2.096471786479479,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 20,
+          "te_fraction": 0.9985617326688472
+        },
+        {
+          "core_confinement": 0.8420217528737401,
+          "grid_step_um": 0.02986742716201634,
+          "mode_index": 0,
+          "n_eff": 1.7985066351004497,
+          "n_eff_shifted": 1.7985066351004497,
+          "n_group": 2.0937495967591313,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 26,
+          "te_fraction": 0.9980528299950443
+        },
+        {
+          "core_confinement": 0.8581573338702009,
+          "grid_step_um": 0.024267284569138278,
+          "mode_index": 0,
+          "n_eff": 1.8022526660203149,
+          "n_eff_shifted": 1.8022282161866026,
+          "n_group": 2.0949724680509423,
+          "shift_delta_n_eff": 2.444983371230336e-05,
+          "shift_overlap": 0.9999920827488712,
+          "steps_per_wvl": 32,
+          "te_fraction": 0.9984171341173794
+        }
+      ],
+      "schema": "mrr-mode-diagnostic/2",
+      "subpixel_active": false,
+      "wavelength_um": 1.55
+    }
+  ],
+  "schema": "mrr-mode-diagnostic/2",
+  "shift_um": 1e-12
+}
