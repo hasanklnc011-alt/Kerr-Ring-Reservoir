@@ -97,8 +97,13 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 - Sonuçlar: (a) `ε` gevşemesi toleransı 4.6 kat rahatlatıyor; (b) buna rağmen
   aktif trim mimarinin parçası, opsiyon değil; (c) SiN Si'den ~9.6 kat az
   hassas — G1'in veremediği **fiziksel** platform argümanı.
-- Dondurma için gereken: P1 proses/malzeme aralıkları, gap → `κ` hassasiyeti
-  (ölçülmedi), P2/P3 çalışma noktası.
+- **Gap → `κ` ölçüldü** (`plan2-kerr-P5-0003`): parity ile seçilmiş supermode,
+  `L_d` Si 117.7 nm / SiN 185.5 nm, `|d ln κ/dg|` Si 0.85 %/nm / SiN 0.54 %/nm.
+  Eski hattın "κ altı hanede sabit" bulgusu selector hatasıymış; burada κ
+  150→300 nm'de Si'de 3.6, SiN'de 2.2 kat düşüyor.
+- Tolerans sıralaması: ±10 nm gap → `Q_e`'de ~%11–18; 1 nm genişlik →
+  25 linewidth rezonans kayması. **Baskın risk rezonans hizalaması, kuplaj değil.**
+- Dondurma için kalan: P1 proses/malzeme aralıkları, P2/P3 çalışma noktası.
 - Trim bütçesi hesaplanamıyor: termo-optik ayar verimliliği `unresolved` (P1).
 
 ## [P6] 3B EM ve nihai kör test

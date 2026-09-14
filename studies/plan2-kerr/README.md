@@ -13,7 +13,7 @@ Sahip Claude (kod/test); Codex dokümantasyon.
 | SLOT | slot/port bütçesi | **KİLİTLİ** — 8 slot × 4 port = 32 özellik |
 | P0 | çalışma alanı, protokol, kayıt biçimi | **CLOSED** |
 | P1 | malzeme ve güç fizibilitesi | OPEN |
-| P5 | senaryo tasarımı | TASLAK — geometri hassasiyeti ölçüldü |
+| P5 | senaryo tasarımı | TASLAK — geometri ve gap hassasiyeti ölçüldü |
 | P2–P6 | — | OPEN |
 
 Hiçbir fiziksel kapı geçilmedi; hiçbir ücretli solve yapılmadı.

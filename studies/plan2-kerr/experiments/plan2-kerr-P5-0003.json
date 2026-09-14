@@ -1,0 +1,113 @@
+{
+  "artifacts": [
+    {
+      "note": "",
+      "path": "reports/tolerance/gap-coupling.json",
+      "role": "output",
+      "sha256": "8afee14f67aa48ef13ca589d64fd82ee5a1f2894f9f38580ad3ec8ddbb274ddd"
+    }
+  ],
+  "benchmark": {},
+  "command": "python -m fdtd.modes coupling --output reports/tolerance/gap-coupling.json",
+  "created_utc": "2026-09-14T17:42:33Z",
+  "experiment_id": "plan2-kerr-P5-0003",
+  "gates": [],
+  "git": {
+    "commit": "f4066bf2d7bfd5884d742e8140d867b503efb167",
+    "dirty": true
+  },
+  "notes": [
+    "P5 input, not a P5 result: no gate is evaluated here.",
+    "The scenario design document is referenced, not hashed: it evolves as further axes are measured, and hashing it here would invalidate every measurement record on each edit.",
+    "Design document: studies/plan2-kerr/P5-SCENARIO-DESIGN.md",
+    "This is the measurement the inherited line got wrong: it reported kappa constant to six digits over 150-300 nm because its selector took the two highest n_eff instead of the parity pair.",
+    "Parity separated cleanly (+1.00 / -1.00) at every gap here, and the sweep refuses a non-monotone kappa by construction.",
+    "A 10 nm gap error perturbs kappa by 5-9%, i.e. ~10-18% in Q_e. Compare a 1 nm width error: ~25 linewidths of resonance shift. Resonance alignment dominates the fabrication risk, not coupling."
+  ],
+  "parameters": [
+    {
+      "name": "kappa_decay_length_Si",
+      "note": "",
+      "source": "two-guide supermode split, parity-selected, local mode solver with subpixel on, 26 steps/wvl, gaps 150-300 nm",
+      "status": "EM-supported",
+      "unit": "nm",
+      "value": 117.66801215791365
+    },
+    {
+      "name": "kappa_decay_length_SiN",
+      "note": "",
+      "source": "two-guide supermode split, parity-selected, local mode solver with subpixel on, 26 steps/wvl, gaps 150-300 nm",
+      "status": "EM-supported",
+      "unit": "nm",
+      "value": 185.46845821344684
+    },
+    {
+      "name": "dlnkappa_dgap_Si",
+      "note": "",
+      "source": "two-guide supermode split, parity-selected, local mode solver with subpixel on, 26 steps/wvl, gaps 150-300 nm",
+      "status": "EM-supported",
+      "unit": "1/nm",
+      "value": 0.00849848639116953
+    },
+    {
+      "name": "dlnkappa_dgap_SiN",
+      "note": "",
+      "source": "two-guide supermode split, parity-selected, local mode solver with subpixel on, 26 steps/wvl, gaps 150-300 nm",
+      "status": "EM-supported",
+      "unit": "1/nm",
+      "value": 0.005391752374676817
+    },
+    {
+      "name": "process_gap_tolerance",
+      "note": "",
+      "source": "P1 open: no sourced lithography gap tolerance",
+      "status": "unresolved",
+      "unit": "nm",
+      "value": null
+    },
+    {
+      "name": "ring_coupler_geometry",
+      "note": "",
+      "source": "straight-guide kappa; a ring-bus coupler has a gap that varies along the interaction and needs kappa(s) integrated, which is P4 work",
+      "status": "unresolved",
+      "unit": "",
+      "value": null
+    }
+  ],
+  "passed": false,
+  "phase": 5,
+  "readout": {
+    "decision": "docs/decisions/2026-09-14-slot-count.md",
+    "digital_taps": 0,
+    "max_loss_db_per_cm": 0.41695511899769006,
+    "n_features": 32,
+    "ports": 4,
+    "q_floor": 422224.248521624,
+    "q_intrinsic_required": 844448.497043248,
+    "q_intrinsic_required_at_1_over_e": 3888829.042186019,
+    "retention": 0.01,
+    "retention_decision": "docs/decisions/2026-09-14-retention-noise-floor.md",
+    "ridge_selection": "train_inner_split",
+    "sampling": "slot_end",
+    "slots": 8,
+    "symbol_time_s": 1.6e-10
+  },
+  "schema": "plan2-kerr-experiment/1",
+  "supersedes": null,
+  "title": "Gap to coupling sensitivity (P5 scenario-design input)",
+  "tools": {
+    "executable": "C:\\Users\\hasan\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+    "numpy": "2.4.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7",
+    "scipy": "1.18.0",
+    "tidy3d": "2.12.0",
+    "xarray": "2026.4.0"
+  },
+  "uncertainty_method": "log-linear fit over six gaps; R^2 reported per cross-section, no error bar assigned",
+  "unresolved_inputs": [
+    "process_gap_tolerance",
+    "ring_coupler_geometry"
+  ],
+  "validity": "Two identical straight guides at 1550 nm, single TE even/odd supermode pair, gaps 150-300 nm. Point-coupling for a real bent ring-bus coupler is NOT covered."
+}

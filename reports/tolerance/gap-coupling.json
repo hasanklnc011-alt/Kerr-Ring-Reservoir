@@ -1,0 +1,194 @@
+{
+  "cross_sections": {
+    "Si-450x220": {
+      "fit": {
+        "decay_length_nm": 117.66801215791365,
+        "kappa0_per_m": 339700.8009484128,
+        "r_squared": 0.9993160392105893,
+        "relative_change_per_nm": 0.00849848639116953
+      },
+      "points": [
+        {
+          "coupling_length_um": 16.260871108312582,
+          "delta_n": 0.04766042328469222,
+          "gap_um": 0.15,
+          "kappa_amplitude_per_m": 96599.76494075419,
+          "n_even": 2.3821604262429656,
+          "n_odd": 2.3345000029582734,
+          "parity_even": 1.0,
+          "parity_odd": -1.0000000000000002,
+          "steps_per_wvl": 26,
+          "te_even": 0.9793748725061848,
+          "te_odd": 0.9804161960124751
+        },
+        {
+          "coupling_length_um": 20.841753344132538,
+          "delta_n": 0.037184971302723024,
+          "gap_um": 0.175,
+          "kappa_amplitude_per_m": 75367.76301198834,
+          "n_even": 2.3747013603978244,
+          "n_odd": 2.3375163890951014,
+          "parity_even": 0.9999999999984642,
+          "parity_odd": -0.9999999999962954,
+          "steps_per_wvl": 26,
+          "te_even": 0.9788715952516259,
+          "te_odd": 0.9790145222155672
+        },
+        {
+          "coupling_length_um": 25.2497452013375,
+          "delta_n": 0.030693379034927748,
+          "gap_um": 0.2,
+          "kappa_amplitude_per_m": 62210.38328385548,
+          "n_even": 2.370950373593118,
+          "n_odd": 2.34025699455819,
+          "parity_even": 1.0,
+          "parity_odd": -1.0,
+          "steps_per_wvl": 26,
+          "te_even": 0.9791943862819912,
+          "te_odd": 0.9792118415609218
+        },
+        {
+          "coupling_length_um": 31.503538330128332,
+          "delta_n": 0.02460041128963697,
+          "gap_um": 0.225,
+          "kappa_amplitude_per_m": 49860.949279232846,
+          "n_even": 2.366676738177054,
+          "n_odd": 2.342076326887417,
+          "parity_even": 1.0000000000000002,
+          "parity_odd": -1.0,
+          "steps_per_wvl": 26,
+          "te_even": 0.9785155651419883,
+          "te_odd": 0.9779644657611731
+        },
+        {
+          "coupling_length_um": 38.703369732918425,
+          "delta_n": 0.020024096231105126,
+          "gap_um": 0.25,
+          "kappa_amplitude_per_m": 40585.518460912856,
+          "n_even": 2.3647744402937656,
+          "n_odd": 2.3447503440626605,
+          "parity_even": 1.0,
+          "parity_odd": -1.0,
+          "steps_per_wvl": 26,
+          "te_even": 0.9791229744201663,
+          "te_odd": 0.9786202749557216
+        },
+        {
+          "coupling_length_um": 58.85673033701068,
+          "delta_n": 0.013167568017495856,
+          "gap_um": 0.3,
+          "kappa_amplitude_per_m": 26688.47416090897,
+          "n_even": 2.360972225215716,
+          "n_odd": 2.3478046571982203,
+          "parity_even": 0.999999999997886,
+          "parity_odd": -0.9999999999970336,
+          "steps_per_wvl": 26,
+          "te_even": 0.9790180173470826,
+          "te_odd": 0.9783389935191286
+        }
+      ]
+    },
+    "SiN-1200x800": {
+      "fit": {
+        "decay_length_nm": 185.46845821344684,
+        "kappa0_per_m": 112112.76339930906,
+        "r_squared": 0.989668498697447,
+        "relative_change_per_nm": 0.005391752374676817
+      },
+      "points": [
+        {
+          "coupling_length_um": 31.45097235816559,
+          "delta_n": 0.024641527491559012,
+          "gap_um": 0.15,
+          "kappa_amplitude_per_m": 49944.28499400821,
+          "n_even": 1.817937106381987,
+          "n_odd": 1.793295578890428,
+          "parity_even": 1.0,
+          "parity_odd": -1.0,
+          "steps_per_wvl": 26,
+          "te_even": 0.9986939440231035,
+          "te_odd": 0.9986042192708108
+        },
+        {
+          "coupling_length_um": 34.507734571614904,
+          "delta_n": 0.0224587330817565,
+          "gap_um": 0.175,
+          "kappa_amplitude_per_m": 45520.12313456791,
+          "n_even": 1.8164613582890938,
+          "n_odd": 1.7940026252073373,
+          "parity_even": 0.9999999999999998,
+          "parity_odd": -0.9999999999999999,
+          "steps_per_wvl": 26,
+          "te_even": 0.9986208619980608,
+          "te_odd": 0.9985341023252694
+        },
+        {
+          "coupling_length_um": 42.01786793316369,
+          "delta_n": 0.018444534149918423,
+          "gap_um": 0.2,
+          "kappa_amplitude_per_m": 37384.008376948244,
+          "n_even": 1.8130200752122274,
+          "n_odd": 1.794575541062309,
+          "parity_even": 1.0,
+          "parity_odd": -1.0,
+          "steps_per_wvl": 26,
+          "te_even": 0.9985690373283652,
+          "te_odd": 0.9985963541625327
+        },
+        {
+          "coupling_length_um": 48.47679479742261,
+          "delta_n": 0.015987030562532256,
+          "gap_um": 0.225,
+          "kappa_amplitude_per_m": 32403.056624494733,
+          "n_even": 1.811301442215541,
+          "n_odd": 1.7953144116530086,
+          "parity_even": 1.0,
+          "parity_odd": -1.0000000000000002,
+          "steps_per_wvl": 26,
+          "te_even": 0.9985220671818422,
+          "te_odd": 0.99855074287766
+        },
+        {
+          "coupling_length_um": 55.24608975851999,
+          "delta_n": 0.014028142143408084,
+          "gap_um": 0.25,
+          "kappa_amplitude_per_m": 28432.71503306078,
+          "n_even": 1.8100087299927659,
+          "n_odd": 1.7959805878493578,
+          "parity_even": 1.0,
+          "parity_odd": -0.9999999999999999,
+          "steps_per_wvl": 26,
+          "te_even": 0.9984858885711672,
+          "te_odd": 0.9985039106959349
+        },
+        {
+          "coupling_length_um": 68.55825166392017,
+          "delta_n": 0.01130425559565218,
+          "gap_um": 0.3,
+          "kappa_amplitude_per_m": 22911.84924748529,
+          "n_even": 1.808426421448183,
+          "n_odd": 1.797122165852531,
+          "parity_even": 1.0000000000000002,
+          "parity_odd": -1.0,
+          "steps_per_wvl": 26,
+          "te_even": 0.9984214751219428,
+          "te_odd": 0.998397764199384
+        }
+      ]
+    }
+  },
+  "environment": {
+    "extras_installed": true,
+    "extras_version": "2.11.2",
+    "numpy": "2.4.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7",
+    "reason": "subpixel-averaged solve succeeded and changed the result",
+    "subpixel_available": true,
+    "subpixel_effect": 0.11719679819117035,
+    "tidy3d": "2.11.2"
+  },
+  "schema": "mrr-gap-coupling/1",
+  "subpixel_active": true,
+  "wavelength_um": 1.55
+}

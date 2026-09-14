@@ -24,7 +24,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DOCS = (
     "studies/plan2-kerr/BENCHMARK-PROTOCOL.md",
     "studies/plan2-kerr/PLATFORM-EVIDENCE.md",
-    "studies/plan2-kerr/README.md",
     "docs/decisions/2026-09-14-plan2-kerr-reservoir.md",
     "docs/decisions/2026-09-14-slot-count.md",
     "plan2_kerr/readout_contract.py",
@@ -107,6 +106,8 @@ def main() -> int:
             "epsilon = 1/e is still a modelling choice, not a measured threshold.",
             "Earlier P0 records are superseded, not edited: each hashed the "
             "protocol documents as they stood at the time.",
+            "The workspace README is referenced, not hashed: it is a status "
+            "page that changes whenever any phase moves.",
         ],
     )
 

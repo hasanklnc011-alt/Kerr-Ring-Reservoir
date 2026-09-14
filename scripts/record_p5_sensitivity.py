@@ -21,7 +21,6 @@ from plan2_kerr import readout_contract as rc
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MEASUREMENT = REPO_ROOT / "reports" / "tolerance" / "geometry-sensitivity.json"
-DESIGN = REPO_ROOT / "studies" / "plan2-kerr" / "P5-SCENARIO-DESIGN.md"
 
 
 def main() -> int:
@@ -42,10 +41,8 @@ def main() -> int:
         command="python -m fdtd.modes sensitivity --output "
                 "reports/tolerance/geometry-sensitivity.json",
         readout=rc.summary(),
-        artifacts=[
-            prov.artifact(MEASUREMENT, "output", repo_root=REPO_ROOT),
-            prov.artifact(DESIGN, "output", repo_root=REPO_ROOT),
-        ],
+        artifacts=[prov.artifact(MEASUREMENT, "output", repo_root=REPO_ROOT)],
+        supersedes="plan2-kerr-P5-0001",
         parameters=[
             prov.Parameter("dlambda_dwidth_Si", si["dlambda_d_width_pm_per_nm"],
                            "pm/nm", "EM-supported", measured),
@@ -71,6 +68,10 @@ def main() -> int:
                            "the G1 convergence gate; no error bar assigned",
         notes=[
             "P5 input, not a P5 result: no gate is evaluated here.",
+            "The scenario design document is referenced, not hashed: it evolves "
+            "as further axes are measured, and hashing it here would invalidate "
+            "every measurement record on each edit.",
+            "Design document: studies/plan2-kerr/P5-SCENARIO-DESIGN.md",
             "SiN is ~9.6x less width-sensitive than Si. G1 removed the "
             "numerical case for switching platform; this is a physical one.",
             "The epsilon relaxation widens the linewidth 4.6x and therefore "

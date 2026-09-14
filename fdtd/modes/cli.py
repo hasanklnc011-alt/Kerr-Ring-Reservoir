@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 
 from . import diagnose as diag_mod
+from . import coupling as coup_mod
 from . import sensitivity as sens_mod
 from .environment import (
     EnvironmentReport,
@@ -154,6 +155,57 @@ def cmd_sensitivity(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_coupling(args: argparse.Namespace) -> int:
+    try:
+        subpixel, env_report = _resolve_subpixel(False)
+    except SubpixelUnavailable as exc:
+        print(f"BLOCKED: {exc}")
+        return 3
+
+    gaps = [float(g) / 1e3 for g in args.gaps_nm.split(",")]
+    names = (args.cross_section.split(",") if args.cross_section
+             else sorted(diag_mod.CROSS_SECTIONS))
+    settings = coup_mod.SolveSettings(steps_per_wvl=args.steps_per_wvl,
+                                      num_modes=args.num_modes)
+
+    payload = {"schema": "mrr-gap-coupling/1",
+               "environment": env_report.to_dict(),
+               "subpixel_active": subpixel,
+               "wavelength_um": settings.wavelength_um,
+               "cross_sections": {}}
+    failed = False
+    for name in names:
+        cs = diag_mod.cross_section_by_name(name)
+        print(f"sweeping {cs.name} ...", flush=True)
+        try:
+            points = coup_mod.sweep_gaps(cs, gaps, settings)
+            fit = coup_mod.fit_exponential(points)
+        except coup_mod.SupermodeError as exc:
+            print(f"  BLOCKED: {exc}")
+            failed = True
+            continue
+        payload["cross_sections"][cs.name] = {
+            "points": [pt.to_dict() for pt in points],
+            "fit": fit.to_dict(),
+        }
+        print(f"  {'gap(nm)':>8}{'delta_n':>12}{'kappa(1/m)':>13}"
+              f"{'L_c(um)':>10}{'parity':>16}")
+        for pt in points:
+            print(f"  {pt.gap_um * 1e3:8.0f}{pt.delta_n:12.4e}"
+                  f"{pt.kappa_amplitude_per_m:13.1f}{pt.coupling_length_um():10.2f}"
+                  f"{pt.parity_even:8.2f}/{pt.parity_odd:.2f}")
+        print(f"  decay length {fit.decay_length_nm:.1f} nm, R2={fit.r_squared:.5f}, "
+              f"|d ln kappa / d gap| = {fit.relative_change_per_nm * 100:.2f} %/nm")
+
+    if args.output:
+        path = Path(args.output)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + chr(10),
+                        encoding="utf-8")
+        print(f"{chr(10)}wrote {path}")
+    return 1 if failed else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="fdtd.modes")
     sub = p.add_subparsers(dest="command", required=True)
@@ -183,6 +235,15 @@ def build_parser() -> argparse.ArgumentParser:
                     default=sens_mod.DEFAULT_HALF_STEP_UM * 1e3)
     sn.add_argument("--output", default=None)
     sn.set_defaults(func=cmd_sensitivity)
+
+    cp = sub.add_parser("coupling",
+                        help="gap -> kappa by supermode parity (P5 input)")
+    cp.add_argument("--cross-section", default=None)
+    cp.add_argument("--gaps-nm", default="150,175,200,225,250,300")
+    cp.add_argument("--steps-per-wvl", type=int, default=26)
+    cp.add_argument("--num-modes", type=int, default=6)
+    cp.add_argument("--output", default=None)
+    cp.set_defaults(func=cmd_coupling)
 
     return p
 

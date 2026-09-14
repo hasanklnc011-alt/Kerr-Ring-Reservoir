@@ -1,0 +1,123 @@
+{
+  "artifacts": [
+    {
+      "note": "",
+      "path": "reports/tolerance/geometry-sensitivity.json",
+      "role": "output",
+      "sha256": "e9104924bc8e38917b26aefd089772f18a9169bf9b24ee2b6ae8958fcd64408e"
+    }
+  ],
+  "benchmark": {},
+  "command": "python -m fdtd.modes sensitivity --output reports/tolerance/geometry-sensitivity.json",
+  "created_utc": "2026-09-14T17:42:29Z",
+  "experiment_id": "plan2-kerr-P5-0002",
+  "gates": [],
+  "git": {
+    "commit": "f4066bf2d7bfd5884d742e8140d867b503efb167",
+    "dirty": true
+  },
+  "notes": [
+    "P5 input, not a P5 result: no gate is evaluated here.",
+    "The scenario design document is referenced, not hashed: it evolves as further axes are measured, and hashing it here would invalidate every measurement record on each edit.",
+    "Design document: studies/plan2-kerr/P5-SCENARIO-DESIGN.md",
+    "SiN is ~9.6x less width-sensitive than Si. G1 removed the numerical case for switching platform; this is a physical one.",
+    "The epsilon relaxation widens the linewidth 4.6x and therefore relaxes the tolerance requirement by the same factor.",
+    "Even so, 1 nm of width error is ~25 linewidths on SiN at the working Q: active trim is part of the architecture.",
+    "Thermal trim shares a channel with the thermal dynamics the design intends to use; P2 must separate them."
+  ],
+  "parameters": [
+    {
+      "name": "dlambda_dwidth_Si",
+      "note": "",
+      "source": "local mode solver, subpixel on, central difference +-1 nm, 26 steps/wvl; G1 convergence gate passed",
+      "status": "EM-supported",
+      "unit": "pm/nm",
+      "value": 894.1608800318888
+    },
+    {
+      "name": "dlambda_dwidth_SiN",
+      "note": "",
+      "source": "local mode solver, subpixel on, central difference +-1 nm, 26 steps/wvl; G1 convergence gate passed",
+      "status": "EM-supported",
+      "unit": "pm/nm",
+      "value": 92.79639666464492
+    },
+    {
+      "name": "dlambda_dheight_Si",
+      "note": "",
+      "source": "local mode solver, subpixel on, central difference +-1 nm, 26 steps/wvl; G1 convergence gate passed",
+      "status": "EM-supported",
+      "unit": "pm/nm",
+      "value": 1948.1287344114487
+    },
+    {
+      "name": "dlambda_dheight_SiN",
+      "note": "",
+      "source": "local mode solver, subpixel on, central difference +-1 nm, 26 steps/wvl; G1 convergence gate passed",
+      "status": "EM-supported",
+      "unit": "pm/nm",
+      "value": 190.69717729000953
+    },
+    {
+      "name": "process_width_tolerance",
+      "note": "",
+      "source": "P1 open: no sourced process tolerance yet",
+      "status": "unresolved",
+      "unit": "nm",
+      "value": null
+    },
+    {
+      "name": "thermo_optic_tuning_efficiency",
+      "note": "",
+      "source": "P1 open: trim range cannot be computed without it",
+      "status": "unresolved",
+      "unit": "pm/K",
+      "value": null
+    },
+    {
+      "name": "gap_to_kappa_sensitivity",
+      "note": "",
+      "source": "not measured; kappa depends exponentially on gap",
+      "status": "unresolved",
+      "unit": "1/nm",
+      "value": null
+    }
+  ],
+  "passed": false,
+  "phase": 5,
+  "readout": {
+    "decision": "docs/decisions/2026-09-14-slot-count.md",
+    "digital_taps": 0,
+    "max_loss_db_per_cm": 0.41695511899769006,
+    "n_features": 32,
+    "ports": 4,
+    "q_floor": 422224.248521624,
+    "q_intrinsic_required": 844448.497043248,
+    "q_intrinsic_required_at_1_over_e": 3888829.042186019,
+    "retention": 0.01,
+    "retention_decision": "docs/decisions/2026-09-14-retention-noise-floor.md",
+    "ridge_selection": "train_inner_split",
+    "sampling": "slot_end",
+    "slots": 8,
+    "symbol_time_s": 1.6e-10
+  },
+  "schema": "plan2-kerr-experiment/1",
+  "supersedes": "plan2-kerr-P5-0001",
+  "title": "Geometry to resonance sensitivity (P5 scenario-design input)",
+  "tools": {
+    "executable": "C:\\Users\\hasan\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+    "numpy": "2.4.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7",
+    "scipy": "1.18.0",
+    "tidy3d": "2.12.0",
+    "xarray": "2026.4.0"
+  },
+  "uncertainty_method": "central difference at +-1 nm on a mesh that passed the G1 convergence gate; no error bar assigned",
+  "unresolved_inputs": [
+    "process_width_tolerance",
+    "thermo_optic_tuning_efficiency",
+    "gap_to_kappa_sensitivity"
+  ],
+  "validity": "Straight waveguide cross-section at 1550 nm, single TE core mode, no bend, no coupler, no supermode. Sensitivities are local derivatives, valid for small excursions only."
+}

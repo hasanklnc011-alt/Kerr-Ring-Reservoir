@@ -4,9 +4,9 @@ Durum: **TASLAK.** İlk P5 skorundan önce dondurulacak (Plan 2 ADR §7:
 "64 ön kayıtlı senaryo"). Eksenlerin yapısı burada; malzeme aralıkları P1'i
 bekliyor.
 
-Üretim: `./.venv-mode-211/Scripts/python.exe -m fdtd.modes sensitivity`
-Ham veri: `reports/tolerance/geometry-sensitivity.json`
-Kayıt: `plan2-kerr-P5-0001`
+Üretim: `./.venv-mode-211/Scripts/python.exe -m fdtd.modes sensitivity` ve `... coupling`
+Ham veri: `reports/tolerance/geometry-sensitivity.json`, `reports/tolerance/gap-coupling.json`
+Kayıtlar: `plan2-kerr-P5-0002` (geometri), `plan2-kerr-P5-0003` (gap)
 
 ## 0. Neden şimdi
 
@@ -57,7 +57,7 @@ Hedef 64 senaryo = 6 ikili eksen, ya da ağırlıklı bir tasarım. Taslak:
 |---|---|---|---|
 | 1 | kılavuz genişliği | **ölçüldü** (hassasiyet) | aralık P1'den (proses toleransı) |
 | 2 | film kalınlığı | **ölçüldü** (hassasiyet) | ortak mod: iki halka birlikte kayar |
-| 3 | bus–ring ve ring–ring gap | AÇIK | `κ` gap'e üstel; hassasiyet ölçülmedi |
+| 3 | bus–ring ve ring–ring gap | **ölçüldü** | `κ` üstel; SiN 0.54 %/nm, Si 0.85 %/nm |
 | 4 | halkalar arası rezonans uyumsuzluğu | kısmen | eksen 1–2'den türer; **yerel** varyasyon gerekir |
 | 5 | lineer kayıp | AÇIK | P1 |
 | 6 | Kerr katsayısı | AÇIK | P1 |
@@ -68,6 +68,43 @@ Hedef 64 senaryo = 6 ikili eksen, ya da ağırlıklı bir tasarım. Taslak:
 Aynı dilimdeki iki halka genişlik hatasının büyük kısmını *paylaşır*; onları
 ayıran şey yerel varyasyondur ve reservoir'ın istediği rezonans ilişkisini
 bozan da odur. İkisini tek eksen saymak senaryo kapsamını şişirir.
+
+## 2b. Ölçülen gap → `κ` hassasiyeti
+
+İki özdeş kılavuz, **parity ile seçilmiş** çift/tek supermode,
+`κ = π·Δn/λ` (genlik kuplajı, 1/m). Parity her gap'te temiz: `+1.00 / −1.00`.
+
+| gap (nm) | Si `κ` (1/m) | Si `L_c` (µm) | SiN `κ` (1/m) | SiN `L_c` (µm) |
+|---|---|---|---|---|
+| 150 | 96600 | 16.3 | 49944 | 31.5 |
+| 200 | 62210 | 25.3 | 37384 | 42.0 |
+| 250 | 40586 | 38.7 | 28433 | 55.3 |
+| 300 | 26689 | 58.9 | 22912 | 68.6 |
+
+Üstel uyum `κ = κ₀·exp(−g/L_d)`:
+
+| kesit | `L_d` | `R²` | `\|d ln κ / dg\|` |
+|---|---|---|---|
+| Si 450×220 | 117.7 nm | 0.99932 | **0.85 %/nm** |
+| SiN 1200×800 | 185.5 nm | 0.98967 | **0.54 %/nm** |
+
+### Bu, eski hattın yanlış aldığı ölçüm
+
+Eski depo `κ`'yı 150→300 nm boyunca **altı hanede sabit** raporlamıştı;
+seçici parity yerine en yüksek iki `n_eff`'i alıyordu. Burada `κ` 150→300 nm
+arasında Si'de 3.6, SiN'de 2.2 kat düşüyor. Sweep, monoton düşmeyen bir `κ`'yı
+yapısal olarak reddediyor.
+
+### Tolerans sonucu — gap baskın risk değil
+
+±10 nm gap hatası `κ`'yı SiN'de %5.4, Si'de %8.5 değiştiriyor; `Q_e ∝ 1/κ²`
+olduğundan `Q_e`'de ~%11–18. Karşılaştırın: **1 nm genişlik hatası SiN'de
+25 linewidth rezonans kayması.** Yani üretim riskinin baskın ekseni
+**rezonans hizalaması**, kuplaj değil. P5 senaryo ağırlıkları buna göre
+kurulmalı.
+
+**Uyarı:** bu düz kılavuz `κ`'sıdır. Gerçek halka–bus kuplörü boyunca gap
+değişir ve `κ(s)` integre edilmelidir; bu P4 işidir.
 
 ## 3. Trim bütçesi — hesaplanamıyor
 
@@ -82,12 +119,12 @@ Bu P2'nin model ayrımı sorunudur.
 
 ## 4. Dondurma koşulu
 
-Bu taslak şu üçü olmadan dondurulamaz: P1 malzeme/proses aralıkları,
-gap → `κ` hassasiyeti, ve P2/P3'ten çalışma noktası. Dondurulduğunda 64
-senaryo hash'lenip ilk skordan önce kayda geçecek.
+Gap → `κ` hassasiyeti artık ölçüldü. Kalan iki koşul: **P1 malzeme/proses
+aralıkları** ve **P2/P3'ten çalışma noktası**. Dondurulduğunda 64 senaryo
+hash'lenip ilk skordan önce kayda geçecek.
 
 ## 5. Sınırlar
 
-Düz kılavuz kesiti; bend, kuplaj bölgesi ve supermode dahil değil. Tek dalga
+Düz kılavuz kesiti; bend ve gerçek halka–bus kuplör geometrisi dahil değil. Tek dalga
 boyu (1550 nm), tek mod. Sıcaklık, gerilim ve yaşlanma kaymaları yok. Malzeme
 indisleri standart çalışma figürleri, kaynaklı değil (P1).
