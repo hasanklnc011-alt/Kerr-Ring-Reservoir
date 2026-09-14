@@ -15,12 +15,12 @@ tamamı geri çekilmiştir; bkz. [docs/inherited/OPTICAL-PARAMETER-STATUS.md](do
 | Kapı | Konu | Durum |
 |---|---|---|
 | G0 | Kör-test güvenliği (devralınan bug'lar) | **CLOSED** 2026-09-14 |
-| G1 | Mode solver sağlık kontrolü: SiN vs Si `n_eff` yakınsaması | kök neden bulundu; kapı **OPEN** (`libomp140` eksik) |
+| G1 | Mode solver sağlık kontrolü: SiN vs Si `n_eff` yakınsaması | **CLOSED (PASS)** 2026-09-14 |
 | G2 | Kerr bellek üçgeni: `Q` – `T_sym` – güç fizibilitesi | **CLOSED** 2026-09-14 |
 | P0–P6 | Plan 2 ADR aşamaları | OPEN |
 
-G1 ve G2, Plan 2'ye geçmeden önce hattın kendisini sınayan ön kapılardır;
-ikisi de 0 FC. Ayrıntı: [BACKLOG.md](BACKLOG.md).
+Üç ön kapının üçü de kapandı; hiçbiri ücretli solve kullanmadı. Ayrıntı:
+[BACKLOG.md](BACKLOG.md).
 
 G0'ın kapanışı yalnız kör değerlendirme yolunun güvenliğini kapsar; fizik
 hakkında hiçbir iddia taşımaz.
@@ -51,5 +51,5 @@ python -m tests.narma10_np.run_tests    # benchmark + kör yol güvenliği (122)
 python -m tests.plan2_kerr.run_tests    # G2 bellek üçgeni (41)
 python -m tests.fdtd.run_tests          # G1 mode tanısı (36)
 python -m plan2_kerr.screen --boundary  # G2 taraması
-./.venv-mode/Scripts/python.exe -m fdtd.modes env   # G1 ortam kapısı
+./.venv-mode-211/Scripts/python.exe -m fdtd.modes env  # G1 ortam kapısı
 ```

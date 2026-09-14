@@ -1,6 +1,6 @@
 # Backlog
 
-Kanonik sıra: **G0 ✓ → G2 ✓ → G1 (kök neden ✓, kapı açık) → P0 → P1 …**
+Kanonik sıra: **G0 ✓ → G2 ✓ → G1 ✓ → P0 → P1 …**
 Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 [migrasyon](docs/decisions/2026-09-14-repo-migration.md). Geçmiş: `BACKLOGLOG.md`.
 
@@ -14,18 +14,18 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 
 ## [G1] Mode solver sağlığı — Si vs SiN
 - Sahip: Claude
-- Durum: **KISMEN KAPALI** 2026-09-14 — [karar kaydı](docs/decisions/2026-09-14-g1-mode-solver.md),
+- Durum: **CLOSED (PASS)** 2026-09-14 — [karar kaydı](docs/decisions/2026-09-14-g1-mode-solver.md),
   [rapor](studies/plan2-kerr/G1-MODE-DIAGNOSTIC.md)
-- Kök neden bulundu: `GridSpec.auto` grid çizgilerini yapı sınırlarına yaslıyor;
-  subpixel yokken arayüz atamasını `1e-12 µm` öteleme topluca çeviriyor. Uniform
-  grid'de etki kayboluyor ve `n_eff` monoton yakınsıyor. Mode solver reddedilmemeli.
-- Kontrast ikincil: yayılımı 3.8 kat ölçekliyor ama auto grid'de etki SiN'de de var.
-  **Plan 2'nin platform değişimi bu bulguyla gerekçelenmiyor.**
-- Kanıt: `tests/fdtd/` 36/36; `reports/g1/*.json`.
-- **AÇIK:** kapı kapanmadı. `libomp140.x86_64.dll` (LLVM OpenMP) makinede yok,
-  bu yüzden local subpixel çalışmıyor ve iki koşu da `gate_valid: false`.
-  Sıradaki adım: DLL'i güvenilir kaynaktan edin (Hasan'ın ortam kararı), sonra
-  aynı merdiveni subpixel ile koş.
+- Kök neden **eksik subpixel ortalaması**. `GridSpec.auto`'nun grid-çizgisi
+  yaslaması bağımsız bir hata değil, bu eksikliğin yükselteci.
+- Subpixel açıkken dört kapı da, her iki kesitte, her iki grid'de geçti:
+  Si yayılımı %1.214 → %0.107; auto grid öteleme duyarlılığı 5.9e-03 → 1.1e-15.
+- Kontrast hipotezi kısmen yanlış çıktı: hatanın büyüklüğünü belirliyor,
+  fizibiliteyi değil. **Plan 2'nin platform değişimi gerekçelenmiyor.**
+- Ortam `tidy3d==2.11.2`'ye sabitlendi; 2.12.0'ın Windows wheel'i yeniden
+  dağıtılamaz `libomp140.x86_64.dll` istiyor. Sistem değişikliği yapılmadı.
+- Kanıt: `tests/fdtd/` 40/40; `reports/g1/*.json` (4 koşu). 0 FC.
+- Geri alınan hüküm: "tüm yerel mode solver kullanılamaz" yanlıştı.
 
 ## [G2] Kerr bellek üçgeni
 - Sahip: Claude

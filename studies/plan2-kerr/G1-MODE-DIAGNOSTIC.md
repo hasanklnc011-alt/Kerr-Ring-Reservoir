@@ -3,135 +3,120 @@
 Üretim komutları:
 
 ```bash
-./.venv-mode/Scripts/python.exe -m fdtd.modes env
-./.venv-mode/Scripts/python.exe -m fdtd.modes diagnose --allow-no-subpixel --grid uniform --output reports/g1/mode-diagnostic-nosubpixel.json
-./.venv-mode/Scripts/python.exe -m fdtd.modes diagnose --allow-no-subpixel --grid auto    --output reports/g1/mode-diagnostic-autogrid.json
+./.venv-mode-211/Scripts/python.exe -m fdtd.modes env
+./.venv-mode-211/Scripts/python.exe -m fdtd.modes diagnose --grid uniform --output reports/g1/mode-diagnostic-subpixel-uniform.json
+./.venv-mode-211/Scripts/python.exe -m fdtd.modes diagnose --grid auto    --output reports/g1/mode-diagnostic-subpixel-auto.json
 ```
 
-Kod: `fdtd/modes/` · Testler: `python -m tests.fdtd.run_tests` (36/36)
+Kod: `fdtd/modes/` · Testler: `python -m tests.fdtd.run_tests`
 Karar kaydı: [2026-09-14-g1-mode-solver](../../docs/decisions/2026-09-14-g1-mode-solver.md)
 
-## 0. Baş sonuç
+## 0. Sonuç
 
-Eski hattı durduran `n_eff` salınımının kök nedeni **mode solver değil, grid
-şartnamesi.** `GridSpec.auto` grid çizgilerini yapı sınırlarına yaslıyor;
-arayüz tam bir grid düzlemine denk geldiğinde, subpixel ortalaması yokken bütün
-bir hücre sırasının malzeme ataması kayan nokta eşitliğine kalıyor. Yapıyı
-`1e-12 µm` ötelemek bu atamayı topluca çeviriyor.
+**G1 GEÇTİ.** Her iki kesitte, her iki grid tipinde dört kapının dördü de
+geçiyor — *subpixel ortalaması açıkken*.
 
-Yapıdan bağımsız **uniform** grid'de aynı solver, aynı geometri, aynı seçici ile
-salınım kayboluyor ve `n_eff` monoton yakınsıyor.
+Kök neden **eksik subpixel ortalaması**. `GridSpec.auto`'nun grid çizgilerini
+yapı sınırlarına yaslaması bağımsız bir hata değil, bu eksikliği görünür kılan
+**yükselteç**: arayüz grid düzlemine oturduğunda hücre ataması tek bir kayan
+nokta eşitliğine kalıyor ve `1e-12 µm` öteleme atamayı topluca çeviriyor.
 
-Bu, G1'in BACKLOG'da öngörülen iki şıkkının da dışında üçüncü bir cevap:
-**araç bozuk değil, kurulum yanlıştı.**
+Mode solver sağlam. Reddedilmesi gereken bir araç değil, eksik olan bir ayardı.
 
-## 1. Ortam kapısı
+## 1. Dört koşunun tablosu
 
-`fdtd/modes/env` local subpixel'in gerçekten çalıştığını kanıtlamaya çalışır ve
-çalışmıyorsa durur. Bu makinede durum:
+Aynı solver, aynı geometri, aynı seçici, aynı kapılar. Değişen yalnız iki şey.
 
-```
-tidy3d 2.12.0 · tidy3d-extras 2.12.0 · Python 3.14.7 · Windows 11
-local subpixel  UNAVAILABLE
-reason          tidy3d_extras native worker will not load: DLL load failed
-```
+| subpixel | grid | kesit | `n_eff` yayılımı | bağıl | mesh kapısı (26→32) | en kötü `1e-12 µm` Δ | sonuç |
+|---|---|---|---|---|---|---|---|
+| **ON** | uniform | Si | 2.53e-03 | %0.107 | 6.77e-04 | 0 | **PASS** |
+| **ON** | uniform | SiN | 3.29e-03 | %0.183 | 7.17e-05 | 0 | **PASS** |
+| **ON** | auto | Si | 2.58e-03 | %0.110 | 5.32e-04 | 4.0e-15 | **PASS** |
+| **ON** | auto | SiN | 1.52e-04 | %0.008 | 2.86e-05 | 1.1e-15 | **PASS** |
+| OFF | uniform | Si | 2.79e-02 | %1.214 | 6.37e-03 | 0 | sonuçsuz |
+| OFF | uniform | SiN | 7.40e-03 | %0.412 | 3.75e-03 | 2.4e-05 | sonuçsuz |
+| OFF | auto | Si | 2.86e-02 | %1.211 | 2.86e-02 | 2.9e-14 | sonuçsuz |
+| OFF | auto | SiN | 1.66e-02 | %0.923 | 7.29e-03 | **5.9e-03** | sonuçsuz |
 
-Kök neden PE import tablosu karşılaştırmasıyla kesinleştirildi: iki yerel
-uzantıdan yalnız `_isolated_extension` **`libomp140.x86_64.dll`** (LLVM OpenMP
-çalışma zamanı) istiyor ve bu DLL makinede hiç yok. MSVC çalışma zamanı mevcut,
-yani eksik olan özellikle OpenMP. Ayrıntı: `requirements/README.md`.
+Okunacak üç şey:
 
-**Bu yüzden aşağıdaki koşular G1 kapısını KAPATMAZ.** Hepsi
-`subpixel_active: false`, `gate_valid: false` olarak kayıtlı. Ama kök neden
-sorusunu subpixel olmadan da cevaplıyorlar — çünkü karşılaştırma, subpixel'in
-yokluğunda iki grid tipi arasında.
+1. **Subpixel açıkken yayılım 11 kata kadar küçülüyor** (Si: %1.21 → %0.107) ve
+   mesh kapısı geçiliyor. Subpixel kapalıyken hiçbir kombinasyon geçmiyor.
+2. **Auto grid'in patolojisi subpixel ile tamamen kayboluyor.** Öteleme
+   duyarlılığı `5.9e-03`'ten `1.1e-15`'e (makine hassasiyeti) düşüyor.
+   Yani uniform grid bir *çare* değil, yalnız hasarı azaltan bir önlemdi.
+3. **Uniform grid tek başına yetmiyor.** Subpixel kapalıyken monotonluğu ve
+   öteleme kararlılığını geri getiriyor ama `n_eff` yakınsamıyor
+   (mesh kapısı `6.4e-03`, eşik `1e-03`).
 
-## 2. Uniform grid (yapıdan bağımsız)
+## 2. Subpixel açık, uniform grid — merdiven
 
-`dl = λ₀ / (spw · n_core)`, yapı konumundan bağımsız.
-
-| spw | dl (nm) | n_eff (Si) | ±1e-12 µm Δ | n_eff (SiN) | ±1e-12 µm Δ |
-|---|---|---|---|---|---|
-| 16 | 27.84 / 48.53 | 2.299468914 | 0 | 1.795905824 | 0 |
-| 20 | 22.27 / 38.83 | 2.310727699 | 0 | 1.803304522 | 0 |
-| 26 | 17.13 / 29.87 | 2.321015702 | 0 | 1.798506635 | 0 |
-| 32 | 13.92 / 24.27 | 2.327388983 | 0 | 1.802252666 | 2.4e-05 |
-
-- **Si monoton artıyor.** Yayılım `2.79e-02` (%1.21) — subpixel yokluğunda
-  beklenen yavaş birinci mertebe yakınsama.
-- SiN yayılımı `7.40e-03` (%0.41), Si'nin **3.8 katı küçüğü** — indeks
-  kontrastıyla ölçekleniyor.
-- Öteleme testi neredeyse tümüyle sıfır: arayüzler grid çizgilerine denk
-  gelmediği için sonsuz küçük kayma hiçbir hücreyi çevirmiyor.
-- `n_g` (Si) 4.0994 → 4.1301, son iki mesh arası değişim `%0.18`. Eski
-  depodaki `20 spw → 4.145` değeriyle tutarlı.
-
-## 3. Auto grid (yapı sınırlarına yaslanan)
-
-Aynı solver, aynı geometri, aynı seçici; yalnız `GridSpec.auto`.
-
-| spw | n_eff (Si) | ±1e-12 µm Δ | n_eff (SiN) | ±1e-12 µm Δ |
+| spw | `n_eff` (Si) | `n_g` (Si) | `n_eff` (SiN) | `n_g` (SiN) |
 |---|---|---|---|---|
-| 16 | 2.366257743 | 2.9e-14 | 1.809460996 | 6.7e-16 |
-| 20 | 2.363305017 | 5.8e-15 | 1.811971361 | 6.7e-16 |
-| 26 | **2.387601090** | 8.0e-15 | **1.795405969** | **5.9e-03** |
-| 32 | 2.359042019 | 3.6e-15 | 1.802693437 | 4.4e-16 |
+| 16 | 2.352078497 | 4.14036 | 1.800477529 | 2.09452 |
+| 20 | 2.353198520 | 4.14443 | 1.803770749 | 2.09480 |
+| 26 | 2.353928871 | 4.14753 | 1.802383425 | 2.09369 |
+| 32 | 2.354605619 | 4.14864 | 1.802311771 | 2.09486 |
 
-- **Monotonluk yok.** Si'de 26 spw dışarı fırlıyor — eski raporda da
-  aykırı nokta 26 spw idi (2.2987).
-- SiN'de 26 spw'de `1e-12 µm` öteleme `n_eff`'i **`5.9e-03`** değiştiriyor.
-  Eski depodaki `2.298684 → 2.364882` olayı tam olarak bu: belirli
-  çözünürlüklerde arayüz grid düzlemine oturuyor.
-- Mesh-mesh mod örtüşmesi Si'de `0.9857`'ye düşüyor (uniform'da `0.9995`):
-  yalnız `n_eff` değil, mod profilinin kendisi de zıplıyor.
+Si için `n_g → 4.1486`; eski depodaki `20 spw → 4.145` gözlemiyle tutarlı.
+Seçilen mod her koşuda `mode_index 0`, TE `0.978–0.998`, çekirdek hapsi Si'de
+`0.59–0.60`, SiN'de `0.84–0.86`.
 
-## 4. Yorum
+## 3. Kontrast hipotezi
 
-Üç gözlem birlikte tutarlı tek bir hikâye veriyor:
+Subpixel kapalıyken kontrast hatayı ölçekliyordu (Si yayılımı SiN'in 3.8 katı).
+Subpixel açıkken Si hâlâ daha büyük artık hata taşıyor (mesh kapısı `5.3e-04`
+vs SiN `2.9e-05`, ~18 kat) **ama ikisi de rahatça geçiyor**.
 
-1. Auto grid arayüzlere çizgi yaslar → arayüz grid düzlemindedir.
-2. Subpixel ortalaması yoktur → hücrenin malzemesi tek bir eşitlik kararıyla
-   belirlenir.
-3. Sonsuz küçük öteleme bu kararı topluca çevirir → `n_eff` sıçrar, ve
-   çözünürlük değiştikçe hangi arayüzün hangi düzleme denk geldiği
-   değiştiğinden yakınsama monoton olmaz.
+Yani kontrast artık hatanın büyüklüğünü belirliyor, fizibiliteyi değil.
+**Plan 2'nin platform değişimi bu bulguyla gerekçelenmiyor.** §2'de kurduğum
+"SiN geçer, Si geçmez" beklentisi yanlış çıktı: doğru ayarla ikisi de geçiyor.
 
-Uniform grid 1. adımı kırdığı için etki kayboluyor. Subpixel ortalaması
-2. adımı kıracaktır — standart çözüm budur, ama bu makinede henüz sınanamadı.
+## 4. Ortam
 
-Eski depodaki dört hipotez (mod seçici, substrate hibritleşmesi, PML fiziksel
-kalınlığı, supermode kurgusu) bu mekanizmanın hiçbirini içermiyordu; hepsinin
-çürümesi tutarlı.
+Local subpixel `tidy3d-extras` gerektiriyor ve **2.12.0 bu makinede çalışmıyor**.
+PE import tablosu karşılaştırmasıyla kesinleştirildi:
 
-## 5. Ne kanıtlanmadı
+| wheel | yerel modüller | ek bağımlılık |
+|---|---|---|
+| 2.12.0 | `extension`, `_isolated_extension` | `_isolated_extension` → `libomp140.x86_64.dll` |
+| 2.11.x | yalnız `extension` | `VCOMP140.DLL` |
 
-- **Eski scriptler yeniden çalıştırılmadı.** Onlar gitignore'da ve eski
-  depoda. Buradaki iddia "eski kusur bu mekanizmadır" değil, "bu mekanizma
-  aynı imzayı üretiyor ve kontrollü kurulumda yok edilebiliyor"dur.
-- **Subpixel'in etkiyi kaldırdığı gösterilmedi** — `libomp140.x86_64.dll`
-  eksik. G1 kapısı bu yüzden hâlâ AÇIK.
-- İndeks kontrastı hipotezi **çürütülmedi ama ikincil**: uniform grid'de
-  yayılımı 3.8 kat ölçekliyor, fakat auto grid'de etki iki platformda da var.
-  Yani kontrast büyüklüğü belirliyor, varlığı değil.
-- Malzeme indisleri standart çalışma figürleri; kaynaklı değil (P1).
+`libomp140.x86_64.dll` LLVM'in OpenMP çalışma zamanı; Microsoft onu yalnız
+Visual Studio içinde `debug_nonredist` klasöründe dağıtıyor ve **yeniden
+dağıtılamaz** olarak işaretliyor. Makinede Visual Studio yok. `VCOMP140.DLL`
+ise Microsoft'un kendi OpenMP çalışma zamanı, sıradan VC++ redistributable'ın
+parçası ve `C:\Windows\System32`'de zaten mevcut.
 
-## 6. Sonuç ve etki
+Bu yüzden ortam **2.11.2'ye sabitlendi** ve hiçbir sistem değişikliği
+yapılmadı. Ayrıntı: `requirements/README.md`.
 
-- **Mode solver reddedilmemeli.** Uniform grid + fiziksel mod seçici ile
-  düzgün davranıyor.
-- **Üretimde `GridSpec.auto` arayüz-hassas ölçümlerde kullanılmamalı**, ya da
-  subpixel ortalaması zorunlu tutulmalı.
-- Plan 2'nin platform değişimi bu bulguyla **gerekçelenmiyor**: sorun
-  silikonun yüksek kontrastı değildi. Kontrast yalnız hatayı büyütüyordu.
-- G1 kapısını kapatmak için gereken tek şey `libomp140.x86_64.dll`.
+Ortam kapısı sürümden bağımsız: aynı küçük yüksek-kontrast çözümü flag kapalı
+ve açık koşup **sonucun değişmesini** şart koşuyor. Kabul edilip yok sayılan
+bir flag da kapıyı geçemiyor. Ölçülen etki 2.11.2'de `1.17e-01`.
 
-## 7. Seçici ve örtüşme
+## 5. Seçici
 
 Eski seçicinin kusuru (en yüksek `n_eff`'i almak) giderildi: bir mod ancak
-`TE ≥ 0.8` **ve** çekirdek güç hapsi `≥ 0.5` ise aday. Hiçbiri geçmezse veya
+`TE ≥ 0.8` **ve** çekirdek güç hapsi `≥ 0.5` ise aday. Hiçbiri geçmezse ya da
 iki aday `1e-3` içinde dejenereyse fonksiyon **hata veriyor** — geri düşüş yok.
-Bu koşularda seçilen mod her zaman `mode_index 0`, TE `0.979–0.999`,
-çekirdek hapsi Si'de `0.60`, SiN'de `0.86`.
 
-Örtüşme metriği sözleşmedeki tanımdır; pozitif bir L2 benzerliğidir, güç
-ortogonalliği veya bağımsız fizik doğrulaması değildir.
+## 6. Sınırlar
+
+- **Eski scriptler yeniden çalıştırılmadı** (gitignore'da, eski depoda).
+  İddia "eski kusur kanıtlandı" değil; "aynı imza kontrollü kurulumda üretildi
+  ve doğru ayarla yok edildi"dir.
+- Malzeme indisleri standart çalışma figürleri, kaynaklı değil (P1).
+- Yerel mode solver uzak çözücüyle karşılaştırılmadı; kapı yerel yakınsama
+  kapısıdır, mutlak doğruluk kanıtı değildir.
+- Örtüşme metriği pozitif bir L2 benzerliğidir; güç ortogonalliği veya
+  bağımsız fizik doğrulaması değildir.
+- Tek kesit, düz kılavuz. Bend, kuplaj ve supermode ayrı işlerdir.
+
+## 7. Etki
+
+- Yerel mode solver kullanılabilir; **subpixel ortalaması zorunlu ayardır.**
+- Windows'ta yerel mode işi için `tidy3d 2.11.2` sabitlenmeli.
+- Eski depodaki "tüm yerel solver kullanılamaz" hükmü yanlıştı; "Q_i kesin
+  sayısal kayıptır" ve "Q_bend > 3e7" hükümleri ise bu çalışmayla
+  *sınanmadı* — ayrı işler olarak açık kalıyor.

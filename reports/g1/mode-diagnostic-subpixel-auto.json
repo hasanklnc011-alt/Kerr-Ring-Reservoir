@@ -1,0 +1,265 @@
+{
+  "contrast_comparison": {
+    "mesh_spread_ratio_high_over_low": 17.005885416679533,
+    "rows": [
+      {
+        "cross_section": "SiN-1200x800",
+        "grid_mode": "auto",
+        "index_contrast": 0.552,
+        "mesh_spread_n_eff": 0.00015174130211303982,
+        "worst_shift_delta_n_eff": 1.1102230246251565e-15
+      },
+      {
+        "cross_section": "Si-450x220",
+        "grid_mode": "auto",
+        "index_contrast": 2.036,
+        "mesh_spread_n_eff": 0.002580495196712107,
+        "worst_shift_delta_n_eff": 3.9968028886505635e-15
+      }
+    ],
+    "shift_ratio_high_over_low": 3.6,
+    "verdict": "sensitivity grows with contrast (consistent with interface classification)"
+  },
+  "diagnostics": [
+    {
+      "cross_section": {
+        "box_index": 1.444,
+        "clad_index": 1.444,
+        "core_index": 3.48,
+        "height_um": 0.22,
+        "index_contrast": 2.036,
+        "name": "Si-450x220",
+        "note": "inherited silicon recovery geometry; dn ~ 2.04",
+        "width_um": 0.45
+      },
+      "environment": {
+        "extras_installed": true,
+        "extras_version": "2.11.2",
+        "numpy": "2.4.6",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "python": "3.14.7",
+        "reason": "subpixel-averaged solve succeeded and changed the result",
+        "subpixel_available": true,
+        "subpixel_effect": 0.11719679819117035,
+        "tidy3d": "2.11.2"
+      },
+      "errors": [],
+      "gate_valid": true,
+      "gates": [
+        {
+          "detail": "worst at 16 steps/wvl; physics cannot move under a 1e-12 um offset",
+          "name": "shift",
+          "passed": true,
+          "threshold": 1e-05,
+          "value": 3.9968028886505635e-15
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "mesh",
+          "passed": true,
+          "threshold": 0.001,
+          "value": 0.0005317746514648114
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "group_index",
+          "passed": true,
+          "threshold": 0.01,
+          "value": 0.00037571546921056156
+        },
+        {
+          "detail": "worst of shift-pair and mesh-pair overlaps",
+          "name": "overlap",
+          "passed": true,
+          "threshold": 0.99,
+          "value": 0.9994170576413384
+        }
+      ],
+      "grid_mode": "auto",
+      "mesh_overlaps": [
+        0.9996590692293574,
+        0.9994170576413384,
+        0.9999550652873977
+      ],
+      "passed": true,
+      "points": [
+        {
+          "core_confinement": 0.6538200087113505,
+          "grid_mode": "auto",
+          "grid_step_um": 0.027837643678160922,
+          "mode_index": 0,
+          "n_eff": 2.3527281406372533,
+          "n_eff_shifted": 2.3527281406372493,
+          "n_group": 4.137381793060028,
+          "shift_delta_n_eff": 3.9968028886505635e-15,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 16,
+          "te_fraction": 0.9766769733389336
+        },
+        {
+          "core_confinement": 0.6724962656747757,
+          "grid_mode": "auto",
+          "grid_step_um": 0.02227011494252874,
+          "mode_index": 0,
+          "n_eff": 2.3538329784782372,
+          "n_eff_shifted": 2.353832978478234,
+          "n_group": 4.140746673397183,
+          "shift_delta_n_eff": 3.1086244689504383e-15,
+          "shift_overlap": 0.9999999999999998,
+          "steps_per_wvl": 20,
+          "te_fraction": 0.9766349101522919
+        },
+        {
+          "core_confinement": 0.7193093892571649,
+          "grid_mode": "auto",
+          "grid_step_um": 0.01713085764809903,
+          "mode_index": 0,
+          "n_eff": 2.3547768611825006,
+          "n_eff_shifted": 2.3547768611825006,
+          "n_group": 4.1432868376134415,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 26,
+          "te_fraction": 0.9764708335163365
+        },
+        {
+          "core_confinement": 0.7178376806076802,
+          "grid_mode": "auto",
+          "grid_step_um": 0.013918821839080461,
+          "mode_index": 0,
+          "n_eff": 2.3553086358339654,
+          "n_eff_shifted": 2.3553086358339654,
+          "n_group": 4.144843534571709,
+          "shift_delta_n_eff": 0.0,
+          "shift_overlap": 0.9999999999999556,
+          "steps_per_wvl": 32,
+          "te_fraction": 0.9764151064897845
+        }
+      ],
+      "schema": "mrr-mode-diagnostic/2",
+      "subpixel_active": true,
+      "wavelength_um": 1.55
+    },
+    {
+      "cross_section": {
+        "box_index": 1.444,
+        "clad_index": 1.444,
+        "core_index": 1.996,
+        "height_um": 0.8,
+        "index_contrast": 0.552,
+        "name": "SiN-1200x800",
+        "note": "conventional thick-film Si3N4; dn ~ 0.55",
+        "width_um": 1.2
+      },
+      "environment": {
+        "extras_installed": true,
+        "extras_version": "2.11.2",
+        "numpy": "2.4.6",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "python": "3.14.7",
+        "reason": "subpixel-averaged solve succeeded and changed the result",
+        "subpixel_available": true,
+        "subpixel_effect": 0.11719679819117035,
+        "tidy3d": "2.11.2"
+      },
+      "errors": [],
+      "gate_valid": true,
+      "gates": [
+        {
+          "detail": "worst at 26 steps/wvl; physics cannot move under a 1e-12 um offset",
+          "name": "shift",
+          "passed": true,
+          "threshold": 1e-05,
+          "value": 1.1102230246251565e-15
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "mesh",
+          "passed": true,
+          "threshold": 0.001,
+          "value": 2.8593756822292704e-05
+        },
+        {
+          "detail": "26 -> 32 steps/wvl",
+          "name": "group_index",
+          "passed": true,
+          "threshold": 0.01,
+          "value": 3.5012443483271485e-05
+        },
+        {
+          "detail": "worst of shift-pair and mesh-pair overlaps",
+          "name": "overlap",
+          "passed": true,
+          "threshold": 0.99,
+          "value": 0.9999551924438485
+        }
+      ],
+      "grid_mode": "auto",
+      "mesh_overlaps": [
+        0.9999686260919346,
+        0.9999551924438485,
+        0.9999923148273173
+      ],
+      "passed": true,
+      "points": [
+        {
+          "core_confinement": 0.873614444095451,
+          "grid_mode": "auto",
+          "grid_step_um": 0.048534569138276556,
+          "mode_index": 0,
+          "n_eff": 1.8022686913859123,
+          "n_eff_shifted": 1.8022686913859125,
+          "n_group": 2.0936780388352685,
+          "shift_delta_n_eff": 2.220446049250313e-16,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 16,
+          "te_fraction": 0.9982875499915
+        },
+        {
+          "core_confinement": 0.8944790225562056,
+          "grid_mode": "auto",
+          "grid_step_um": 0.03882765531062124,
+          "mode_index": 0,
+          "n_eff": 1.8023351907152916,
+          "n_eff_shifted": 1.802335190715292,
+          "n_group": 2.0938646407677552,
+          "shift_delta_n_eff": 4.440892098500626e-16,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 20,
+          "te_fraction": 0.9982942228387882
+        },
+        {
+          "core_confinement": 0.8577695661778068,
+          "grid_mode": "auto",
+          "grid_step_um": 0.02986742716201634,
+          "mode_index": 0,
+          "n_eff": 1.802391838931203,
+          "n_eff_shifted": 1.8023918389312041,
+          "n_group": 2.0940276965293743,
+          "shift_delta_n_eff": 1.1102230246251565e-15,
+          "shift_overlap": 1.0,
+          "steps_per_wvl": 26,
+          "te_fraction": 0.9982994378837651
+        },
+        {
+          "core_confinement": 0.880762826777699,
+          "grid_mode": "auto",
+          "grid_step_um": 0.024267284569138278,
+          "mode_index": 0,
+          "n_eff": 1.8024204326880253,
+          "n_eff_shifted": 1.8024204326880249,
+          "n_group": 2.0941010135557514,
+          "shift_delta_n_eff": 4.440892098500626e-16,
+          "shift_overlap": 1.0000000000000002,
+          "steps_per_wvl": 32,
+          "te_fraction": 0.9983000876855715
+        }
+      ],
+      "schema": "mrr-mode-diagnostic/2",
+      "subpixel_active": true,
+      "wavelength_um": 1.55
+    }
+  ],
+  "schema": "mrr-mode-diagnostic/2",
+  "shift_um": 1e-12
+}

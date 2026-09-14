@@ -320,6 +320,54 @@ class RecordedRunsTest(unittest.TestCase):
         n_eff = [p["n_eff"] for p in si["points"]]
         self.assertNotEqual(n_eff, sorted(n_eff))
 
+    def test_subpixel_runs_pass_every_gate(self):
+        """The G1 gate itself: subpixel on, both grids, both cross-sections."""
+        for name in ("mode-diagnostic-subpixel-uniform.json",
+                     "mode-diagnostic-subpixel-auto.json"):
+            data = self._load(name)
+            for d in data["diagnostics"]:
+                self.assertTrue(d["subpixel_active"], name)
+                self.assertTrue(d["gate_valid"], name)
+                self.assertTrue(d["passed"],
+                                f"{name}/{d['cross_section']['name']}: "
+                                f"{[g for g in d['gates'] if not g['passed']]}")
+
+    def test_subpixel_removes_the_auto_grid_shift_sensitivity(self):
+        """5.9e-03 without subpixel, machine precision with it."""
+        def worst(name, cs):
+            data = self._load(name)
+            d = [x for x in data["diagnostics"]
+                 if x["cross_section"]["name"] == cs][0]
+            return max(p["shift_delta_n_eff"] for p in d["points"])
+
+        self.assertGreater(worst("mode-diagnostic-autogrid.json",
+                                 "SiN-1200x800"), 1e-3)
+        self.assertLess(worst("mode-diagnostic-subpixel-auto.json",
+                              "SiN-1200x800"), 1e-9)
+
+    def test_subpixel_tightens_the_mesh_convergence(self):
+        """Uniform grid alone does not converge; subpixel does."""
+        def spread(name, cs):
+            data = self._load(name)
+            d = [x for x in data["diagnostics"]
+                 if x["cross_section"]["name"] == cs][0]
+            n_eff = [p["n_eff"] for p in d["points"]]
+            return max(n_eff) - min(n_eff)
+
+        off = spread("mode-diagnostic-nosubpixel.json", "Si-450x220")
+        on = spread("mode-diagnostic-subpixel-uniform.json", "Si-450x220")
+        self.assertGreater(off / on, 5.0)
+
+    def test_contrast_does_not_decide_feasibility_once_subpixel_is_on(self):
+        """Both contrasts pass; contrast only scales the residual error."""
+        data = self._load("mode-diagnostic-subpixel-uniform.json")
+        gates = {d["cross_section"]["name"]:
+                 {g["name"]: g for g in d["gates"]} for d in data["diagnostics"]}
+        for cs in ("Si-450x220", "SiN-1200x800"):
+            self.assertTrue(gates[cs]["mesh"]["passed"], cs)
+        self.assertGreater(gates["Si-450x220"]["mesh"]["value"],
+                           gates["SiN-1200x800"]["mesh"]["value"])
+
     def test_contrast_scales_the_uniform_grid_spread(self):
         data = self._load("mode-diagnostic-nosubpixel.json")
         spread = {}
