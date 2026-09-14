@@ -64,6 +64,12 @@ Kerr frekans kayması, port kuplajı ve kayıp ayrı terimlerdir. Platformun ger
 absorpsiyon/carrier/termal durumları eklenir. İki halka kuplajı karşılıklı ve
 enerjiyle tutarlıdır. Kaynaksız nonlinear katsayı yalnız sentetik testte kullanılır.
 
+> **DEĞİŞİKLİK 2026-09-14:** Aşağıdaki `20 slot × 2 port = 40 özellik`
+> hükmü [slot/port karar kaydıyla](2026-09-14-slot-count.md)
+> **`8 slot × 4 port = 32 özellik`** olarak değiştirilmiştir. Gerekçe:
+> `Q_floor` yalnız slot sayısına bağlı, porta değil. Özgün metin tarihçe
+> olarak korunmuştur; uygulanan sözleşme `plan2_kerr/readout_contract.py`.
+
 Giriş/readout:
 - Tek optik giriş, sembol başına 20 sabit mask slotu.
 - Tüm mimarilerde aynı maske, ilk skordan önce kilitli.

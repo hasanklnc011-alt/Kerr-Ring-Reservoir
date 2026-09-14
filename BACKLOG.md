@@ -41,20 +41,27 @@ Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 
 ## [SLOT] Slot/port bütçesi kararı
 - Sahip: Claude (analiz); karar Hasan
-- Durum: slot azaltma KABUL; `(slot, port)` çifti **OPEN** —
+- Durum: **KİLİTLİ** 2026-09-14 — 8 slot × 4 port = 32 özellik (Hasan) —
   [karar kaydı](docs/decisions/2026-09-14-slot-count.md),
   [rapor](studies/plan2-kerr/SLOT-DECISION.md)
 - `Q_floor` yalnız slota bağlı, porta değil: slot ↓ + port ↑ tek tutarlı hamle.
 - Özellik hedefi 30 (P3'ün gerçekçi fizik sonucu). ESN referansı 300'de geçiyor;
   bu bir taban değil, gereken ×10 özellik-verimliliğinin ölçüsü.
-- Öneri: **8 slot × 4 port = 32 özellik**; `Q_i ≥ 3.89e6`, kayıp ≤ 0.091 dB/cm.
-- Bekleyen: Hasan'ın port kararı (2 → 4 Plan 2 ADR §4'ü değiştirir).
+- Seçilen: **8 slot × 4 port = 32 özellik**; `Q_i ≥ 3.89e6`, kayıp ≤ 0.091 dB/cm,
+  `T_sym = 160 ps`. Plan 2 ADR §4 buna göre değiştirildi (özgün metin korundu).
+- Tek doğru kaynak `plan2_kerr/readout_contract.py`; sayılar modelden türetiliyor.
+- Açık: portların **bağımsızlığı** P2'de kontrol edilecek.
 
 ## [P0] Araştırma ve benchmark sınırı — 0 FC
-- Durum: OPEN; bağımlılık G0
-- İş ve kabul: Plan 2 ADR §2. Teslimat `studies/plan2-kerr/` altında
-  `README.md`, `BENCHMARK-PROTOCOL.md`, `PLATFORM-EVIDENCE.md`.
-- Not: dokümantasyon yayımlamak tek başına P0 teknik kabulü değildir.
+- Sahip: Claude
+- Durum: **CLOSED** 2026-09-14
+- Teslimat: `studies/plan2-kerr/` altında BENCHMARK-PROTOCOL.md ve
+  PLATFORM-EVIDENCE.md (biçim); `plan2_kerr/readout_contract.py` (kilitli readout);
+  `plan2_kerr/provenance.py` (deney kimliği, araç sürümleri, git durumu,
+  append-only kayıt, hash doğrulama).
+- Kanıt: `plan2-kerr-P0-0001` kaydı yazıldı ve `provenance verify` geçiyor;
+  `tests/plan2_kerr/` 90/90.
+- Sınır: fizik hakkında hiçbir şey sabitlemez. Malzeme girdileri `unresolved`.
 
 ## [P1] Malzeme ve güç fizibilitesi — 0 FC
 - Durum: OPEN; bağımlılık G2, P0
