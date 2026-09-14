@@ -14,13 +14,16 @@ tamamı geri çekilmiştir; bkz. [docs/inherited/OPTICAL-PARAMETER-STATUS.md](do
 
 | Kapı | Konu | Durum |
 |---|---|---|
-| G0 | Kör-test güvenliği (devralınan bug'lar) | OPEN |
+| G0 | Kör-test güvenliği (devralınan bug'lar) | **CLOSED** 2026-09-14 |
 | G1 | Mode solver sağlık kontrolü: SiN vs Si `n_eff` yakınsaması | OPEN |
 | G2 | Kerr bellek üçgeni: `Q` – `T_sym` – güç fizibilitesi | OPEN |
 | P0–P6 | Plan 2 ADR aşamaları | OPEN |
 
 G1 ve G2, Plan 2'ye geçmeden önce hattın kendisini sınayan ön kapılardır;
 ikisi de 0 FC. Ayrıntı: [BACKLOG.md](BACKLOG.md).
+
+G0'ın kapanışı yalnız kör değerlendirme yolunun güvenliğini kapsar; fizik
+hakkında hiçbir iddia taşımaz.
 
 ## Kabul hedefi
 

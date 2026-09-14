@@ -39,6 +39,7 @@ from .candidate_lock import (
     CandidateLockError,
     guard_blind_evaluation,
     load_lock,
+    verify_locked_sources,
 )
 from .dataset import build_all
 
@@ -275,12 +276,15 @@ def _check_candidate_lock(lock_dir: Path) -> Check:
         except (CandidateLockError, ValueError, OSError) as exc:
             details.append(f"{rel}: UNREADABLE ({exc})")
             continue
-        code_present = Path(lk.code_path).exists()
+        drift = verify_locked_sources(lk)
         details.append(
             f"{rel}: id={lk.candidate_id!r} locked={lk.locked} "
-            f"code_present={code_present} "
+            f"entry_point={lk.entry_point!r} sources={len(lk.sources)} "
+            f"source_drift={len(drift)} "
             f"blind_manifest_digest={lk.blind_manifest_digest[:16]}..."
         )
+        for problem in drift:
+            details.append(f"{rel}:   {problem}")
     return Check(name, STATUS_INFO, f"{len(locks)} candidate lock file(s) present", details)
 
 

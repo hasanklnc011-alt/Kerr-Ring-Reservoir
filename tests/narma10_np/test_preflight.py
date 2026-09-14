@@ -9,7 +9,7 @@ from benchmarks.narma10_np import cli
 from benchmarks.narma10_np import config
 from benchmarks.narma10_np import manifest as m
 from benchmarks.narma10_np import preflight
-from benchmarks.narma10_np.candidate_lock import create_lock
+from benchmarks.narma10_np.candidate_lock import ReadoutContract, create_lock
 
 CHECK_NAMES = (
     "environment.provenance",
@@ -90,12 +90,16 @@ class _LockFixture:
     def __init__(self, root: Path, *, locked: bool = True):
         self.lock_dir = root / "candidates"
         self.ledger = root / "ledger.json"
-        self.code = root / "candidate.py"
-        self.code.write_text("# synthetic candidate\nRESERVOIR = 'vX'\n", encoding="utf-8")
+        self.source_root = root / "pkg_c999"
+        self.source_root.mkdir(parents=True, exist_ok=True)
+        (self.source_root / "scorer.py").write_text(
+            "def build_scorer():\n    return lambda trial: 1.0\n", encoding="utf-8")
         create_lock(
             candidate_id="C999",
             description="synthetic preflight fixture",
-            code_path=self.code,
+            entry_point="pkg_c999.scorer:build_scorer",
+            source_root=self.source_root,
+            readout=ReadoutContract(20, 2, 40, "slot_end", 0, "train_inner_split"),
             dev_manifest_path=m.default_path(config.dev_spec()),
             blind_manifest_path=m.default_path(config.blind_spec()),
             lock_path=self.lock_dir / "C999.lock.json",

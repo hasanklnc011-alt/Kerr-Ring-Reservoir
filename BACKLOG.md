@@ -1,19 +1,16 @@
 # Backlog
 
-Kanonik sıra: **G0 → G1 → G2 → P0 → P1 …**
+Kanonik sıra: **G0 (kapandı) → G1 → G2 → P0 → P1 …**
 Kararlar: [Plan 2 ADR](docs/decisions/2026-09-14-plan2-kerr-reservoir.md),
 [migrasyon](docs/decisions/2026-09-14-repo-migration.md). Geçmiş: `BACKLOGLOG.md`.
 
 ## [G0] Kör-test güvenliği
-- Sahip: Claude (kod/test); Codex yalnız sözleşme dokümantasyonu.
-- Durum: OPEN — devralınan bug
-- Bağımlılık: yok
-- İş: `blind-eval` gerçek kilitli scorer'ı çağırsın (baseline değil); tüketim
-  skordan **önce** atomik olsun; eşzamanlı süreç kilidi eklensin; çökme
-  kurtarması yalnız aynı paket/run ve doğrulanmış checkpoint ile olsun.
-- Kabul: baseline çağrısı, transitif kaynak değişimi, farklı adayla tekrar,
-  yarış ve hatalı kurtarma senaryolarını yakalayan testler geçer.
-- Not: G0 kapanana kadar gerçek kör suite çalıştırılmaz.
+- Sahip: Claude (kod/test)
+- Durum: **CLOSED** 2026-09-14 — [karar kaydı](docs/decisions/2026-09-14-g0-blind-test-safety.md)
+- Sonuç: kilit v2 (entry point + paket hash'leri + readout sözleşmesi), baseline
+  yasağı, skordan önce atomik tüketim, dışlayıcı süreç kilidi, `run_id`+checkpoint
+  kurtarma, CLI'dan skorlama parametrelerinin kaldırılması.
+- Kanıt: `tests/narma10_np/` 122/122; `preflight` 8/8.
 
 ## [G1] Mode solver sağlığı — Si vs SiN
 - Sahip: Claude

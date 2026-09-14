@@ -19,7 +19,9 @@ no cloud, no network.
 | `metrics.py` | `nmse` / `nrmse` / `median_nmse` with strict finiteness guards |
 | `readout.py` | closed-form ridge regression readout + delay embedding |
 | `evaluate.py` | `evaluate_states` seam for the future reservoir + `score_spec` acceptance logic |
-| `candidate_lock.py` | fail-closed `guard_blind_evaluation` + append-only, once-only blind result ledger |
+| `candidate_lock.py` | v2 candidate package lock: entry point, per-file source hashes, readout contract, fail-closed `guard_blind_evaluation` |
+| `blind_ledger.py` | atomic single-attempt ledger: reserve-before-scoring, exclusive process lock, checkpointed recovery |
+| `blind_run.py` | the one blind evaluation path (guard -> lock -> reserve -> locked scorer -> complete) |
 | `preflight.py` | deterministic read-only preflight: provenance, manifest verify/digests, finite seed counts, candidate-lock status, blind-eval block state |
 | `cli.py` | `python -m benchmarks.narma10_np ...` |
 
@@ -31,8 +33,9 @@ python -m benchmarks.narma10_np preflight --json      # machine-readable report
 python -m benchmarks.narma10_np generate-manifests
 python -m benchmarks.narma10_np verify-manifests
 python -m benchmarks.narma10_np baseline
-python -m benchmarks.narma10_np lock-candidate --id C001 --code <path> --description "..."
-python -m benchmarks.narma10_np blind-eval --id C001     # fail-closed guard
+python -m benchmarks.narma10_np lock-candidate --id C001 \n    --source-root <dir> --entry-point <module:factory> \n    --slots 20 --ports 2 --description "..."
+python -m benchmarks.narma10_np blind-eval --id C001                  # the single attempt
+python -m benchmarks.narma10_np blind-eval --id C001 --resume-run <id>  # resume a crashed run
 ```
 
 ## Tests

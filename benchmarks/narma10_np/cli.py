@@ -3,12 +3,13 @@
     python -m benchmarks.narma10_np generate-manifests
     python -m benchmarks.narma10_np verify-manifests
     python -m benchmarks.narma10_np baseline
-    python -m benchmarks.narma10_np lock-candidate --id C001 --code PATH --description "..."
+    python -m benchmarks.narma10_np lock-candidate --id C001         --source-root studies/plan2-kerr/candidates/C001         --entry-point studies.plan2_kerr.candidates.c001:build_scorer         --slots 20 --ports 2 --description "..."
     python -m benchmarks.narma10_np blind-eval --id C001
 
 ``baseline`` and every other non-blind command runs only against the dev spec.
-``blind-eval`` goes through :func:`candidate_lock.guard_blind_evaluation` and is
-fail-closed.
+``blind-eval`` goes through :mod:`.blind_run`, which consumes the single blind
+attempt before scoring and runs only the scorer named by the lock. It takes no
+scoring flags on purpose: the CLI cannot change locked settings.
 """
 
 from __future__ import annotations
@@ -20,11 +21,11 @@ from pathlib import Path
 from . import config
 from . import manifest as manifest_mod
 from . import preflight as preflight_mod
+from .blind_run import run_blind_evaluation
 from .candidate_lock import (
     CandidateLockError,
+    ReadoutContract,
     create_lock,
-    guard_blind_evaluation,
-    record_blind_result,
 )
 from .evaluate import baseline_delay_scorer, score_spec
 
@@ -90,35 +91,41 @@ def cmd_preflight(args: argparse.Namespace) -> int:
 
 def cmd_lock_candidate(args: argparse.Namespace) -> int:
     lock_path = LOCK_DIR / f"{args.id}.lock.json"
+    readout = ReadoutContract(
+        slots=args.slots,
+        ports=args.ports,
+        n_features=args.slots * args.ports,
+        sampling=args.sampling,
+        digital_taps=0,
+        ridge_selection=args.ridge_selection,
+        ridge_alpha=args.ridge_alpha,
+    )
     lock = create_lock(
         candidate_id=args.id,
         description=args.description,
-        code_path=Path(args.code),
+        entry_point=args.entry_point,
+        source_root=Path(args.source_root),
+        readout=readout,
         dev_manifest_path=_dev_manifest_path(),
         blind_manifest_path=_blind_manifest_path(),
         lock_path=lock_path,
         locked=not args.draft,
     )
-    print(f"wrote {lock_path.relative_to(REPO_ROOT)} (locked={lock.locked})")
+    print(f"wrote {lock_path.relative_to(REPO_ROOT)} (locked={lock.locked}, "
+          f"sources={len(lock.sources)}, entry_point={lock.entry_point})")
     return 0
 
 
 def cmd_blind_eval(args: argparse.Namespace) -> int:
     lock_path = LOCK_DIR / f"{args.id}.lock.json"
-    ticket = guard_blind_evaluation(lock_path, _blind_manifest_path(), LEDGER_PATH)
-
-    scorer = baseline_delay_scorer(n_delays=args.n_delays, alpha=args.alpha)
-    result = score_spec(config.blind_spec(), scorer)
-    summary = {
-        "median_test_nmse": result.median,
-        "n_under_target": result.n_under_target,
-        "n_seeds": len(result.scores),
-        "per_seed": {s.index: s.test_nmse for s in result.scores},
-        "meets_acceptance": result.meets_acceptance(),
-    }
-    entry = record_blind_result(ticket, summary)
+    entry = run_blind_evaluation(
+        lock_path,
+        _blind_manifest_path(),
+        LEDGER_PATH,
+        resume_run_id=args.resume_run,
+    )
     print(json.dumps(entry, indent=2, sort_keys=True))
-    return 0 if result.meets_acceptance() else 2
+    return 0 if entry["summary"]["meets_acceptance"] else 2
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -147,15 +154,28 @@ def build_parser() -> argparse.ArgumentParser:
 
     lc = sub.add_parser("lock-candidate")
     lc.add_argument("--id", required=True)
-    lc.add_argument("--code", required=True, help="path to the candidate artifact to freeze")
+    lc.add_argument("--source-root", required=True,
+                    help="directory holding the candidate package to freeze")
+    lc.add_argument("--entry-point", required=True,
+                    help="'module:attr' zero-arg factory returning the scorer")
     lc.add_argument("--description", required=True)
+    lc.add_argument("--slots", type=int, required=True, help="mask slots per symbol")
+    lc.add_argument("--ports", type=int, required=True, help="physical output ports")
+    lc.add_argument("--sampling", default="slot_end")
+    lc.add_argument("--ridge-selection", default="train_inner_split",
+                    help="train_inner_split | fixed_locked_alpha")
+    lc.add_argument("--ridge-alpha", type=float, default=None,
+                    help="required only for fixed_locked_alpha")
     lc.add_argument("--draft", action="store_true", help="write an unlocked draft")
     lc.set_defaults(func=cmd_lock_candidate)
 
-    be = sub.add_parser("blind-eval")
+    be = sub.add_parser(
+        "blind-eval",
+        help="the single blind evaluation; takes no scoring flags by design",
+    )
     be.add_argument("--id", required=True)
-    be.add_argument("--n-delays", type=int, default=config.ORDER + 2)
-    be.add_argument("--alpha", type=float, default=config.DEFAULT_RIDGE_ALPHA)
+    be.add_argument("--resume-run", default=None,
+                    help="run_id of a crashed reserved attempt to resume")
     be.set_defaults(func=cmd_blind_eval)
 
     return p

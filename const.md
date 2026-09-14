@@ -8,7 +8,7 @@ kaydı oluşturulmalıdır.
 
 - Proje adı: Kerr Ring Reservoir
 - Yerel kök: `C:\Users\hasan\OneDrive\Desktop\Kerr-Ring-Reservoir`
-- Uzak depo: (ilk push'ta doldurulacak)
+- Uzak depo: `https://github.com/hasanklnc011-alt/Kerr-Ring-Reservoir.git`
 - Kaynak depo: `https://github.com/hasanklnc011-alt/Nonlinear-3D-FDTD-Photonic-Reservoir.git`
 - Kod/test sahibi Claude; Codex yalnız plan, sözleşme ve değerlendirme dokümantasyonu.
 
