@@ -66,10 +66,12 @@ class Sensitivity:
 
 def _n_eff(cs: CrossSection, settings: SolveSettings,
            criteria: SelectionCriteria,
-           *, averaged: bool = False, offsets=DEFAULT_OFFSETS) -> tuple[float, float]:
+           *, averaged: bool = False, offsets=DEFAULT_OFFSETS,
+           axis: str = "xz") -> tuple[float, float]:
     """One geometry point: either a single alignment or the offset average."""
     if averaged:
-        result = measure_averaged(cs, settings, offsets=offsets, criteria=criteria)
+        result = measure_averaged(cs, settings, offsets=offsets,
+                                  criteria=criteria, axis=axis)
         return result.n_eff, result.n_group
     selected = select_te_core_mode(solve(cs, settings), criteria)
     return selected.n_eff, selected.n_group
@@ -81,7 +83,8 @@ def measure(cross_section: CrossSection,
             half_step_um: float = DEFAULT_HALF_STEP_UM,
             criteria: SelectionCriteria | None = None,
             offset_averaged: bool = True,
-            offsets=DEFAULT_OFFSETS) -> Sensitivity:
+            offsets=DEFAULT_OFFSETS,
+            axis: str = "xz") -> Sensitivity:
     """Central-difference geometry derivatives for one cross-section.
 
     ``offset_averaged`` defaults to true: a single-alignment derivative carries
@@ -96,14 +99,14 @@ def measure(cross_section: CrossSection,
     swing = float("nan")
     if offset_averaged:
         nominal = measure_averaged(cross_section, settings, offsets=offsets,
-                                   criteria=criteria)
+                                   criteria=criteria, axis=axis)
         n_eff, n_group, swing = nominal.n_eff, nominal.n_group, nominal.swing
     else:
         n_eff, n_group = _n_eff(cross_section, settings, criteria)
 
     def at(cs):
         return _n_eff(cs, settings, criteria,
-                      averaged=offset_averaged, offsets=offsets)[0]
+                      averaged=offset_averaged, offsets=offsets, axis=axis)[0]
 
     wide = at(replace(cross_section, width_um=cross_section.width_um + half_step_um))
     narrow = at(replace(cross_section, width_um=cross_section.width_um - half_step_um))

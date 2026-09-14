@@ -4,17 +4,17 @@ import json
 import unittest
 from pathlib import Path
 
-from fdtd.modes.alignment import DEFAULT_OFFSETS, AveragedMode
+from fdtd.modes.alignment import DEFAULT_OFFSETS, AveragedMode, placements
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 STUDY = REPO_ROOT / "reports" / "g1" / "alignment-study.json"
 
 
-def make(values, groups=None):
+def make(values, groups=None, axis="z"):
     groups = groups or [4.15] * len(values)
     return AveragedMode(
         cross_section="test", steps_per_wvl=26, grid_step_um=0.017131,
-        offsets=tuple(DEFAULT_OFFSETS[: len(values)]),
+        offsets=tuple(DEFAULT_OFFSETS[: min(len(values), 4)]), axis=axis,
         n_eff_values=tuple(values), n_group_values=tuple(groups),
         n_eff=sum(values) / len(values), n_group=sum(groups) / len(groups),
         swing=max(values) - min(values),
@@ -91,6 +91,48 @@ class RecordedStudyTest(unittest.TestCase):
         self.assertLess(mean_spread, worst_single_swing / 5)
 
 
+class PlacementTest(unittest.TestCase):
+    """A derivative is only cleaned by averaging over its own grid axis."""
+
+    DL = 0.017131
+
+    def test_z_axis_moves_only_z(self):
+        places = placements(DEFAULT_OFFSETS, self.DL, "z")
+        self.assertEqual(len(places), 4)
+        self.assertTrue(all(x == 0.0 for x, _ in places))
+        self.assertAlmostEqual(places[2][1], 0.5 * self.DL)
+
+    def test_x_axis_moves_only_x(self):
+        places = placements(DEFAULT_OFFSETS, self.DL, "x")
+        self.assertEqual(len(places), 4)
+        self.assertTrue(all(z == 0.0 for _, z in places))
+        self.assertAlmostEqual(places[2][0], 0.5 * self.DL)
+
+    def test_xz_is_the_full_outer_product(self):
+        places = placements(DEFAULT_OFFSETS, self.DL, "xz")
+        self.assertEqual(len(places), 16)
+        self.assertEqual(len(set(places)), 16)
+        self.assertIn((0.0, 0.0), places)
+
+    def test_xz_contains_both_single_axis_sets(self):
+        xz = set(placements(DEFAULT_OFFSETS, self.DL, "xz"))
+        for axis in ("x", "z"):
+            self.assertTrue(set(placements(DEFAULT_OFFSETS, self.DL, axis)) <= xz)
+
+    def test_offsets_stay_inside_one_cell(self):
+        for x, z in placements(DEFAULT_OFFSETS, self.DL, "xz"):
+            self.assertLess(x, self.DL)
+            self.assertLess(z, self.DL)
+
+    def test_unknown_axis_is_rejected(self):
+        for bad in ("y", "zx", "", "XZ"):
+            with self.assertRaises(ValueError, msg=bad):
+                placements(DEFAULT_OFFSETS, self.DL, bad)
+
+    def test_axis_is_recorded_on_the_result(self):
+        self.assertEqual(make([2.35, 2.36], axis="xz").axis, "xz")
+
+
 class SensitivityDefaultTest(unittest.TestCase):
     def test_offset_averaging_is_the_default(self):
         import inspect
@@ -98,6 +140,14 @@ class SensitivityDefaultTest(unittest.TestCase):
         from fdtd.modes.sensitivity import measure
         default = inspect.signature(measure).parameters["offset_averaged"].default
         self.assertTrue(default)
+
+    def test_both_axes_are_averaged_by_default(self):
+        """A z-only average leaves an x residue in the width derivative."""
+        import inspect
+
+        from fdtd.modes.sensitivity import measure
+        self.assertEqual(inspect.signature(measure).parameters["axis"].default,
+                         "xz")
 
 
 if __name__ == "__main__":

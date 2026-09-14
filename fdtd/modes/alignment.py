@@ -43,6 +43,24 @@ from .solver import SolveSettings, solve
 DEFAULT_OFFSETS = (0.0, 0.25, 0.5, 0.75)
 
 
+def placements(offsets, grid_step_um: float, axis: str = "z"):
+    """Sub-cell (x, z) displacements to sample, in microns.
+
+    ``"z"`` and ``"x"`` walk one grid axis; ``"xz"`` takes the full outer
+    product. A derivative along one geometry axis is only cleaned by averaging
+    over that axis, so a width derivative needs ``x`` in the set and a height
+    derivative needs ``z``.
+    """
+    if axis not in ("x", "z", "xz"):
+        raise ValueError(f"unknown axis {axis!r}; use 'x', 'z' or 'xz'")
+    if axis == "z":
+        return [(0.0, f * grid_step_um) for f in offsets]
+    if axis == "x":
+        return [(f * grid_step_um, 0.0) for f in offsets]
+    return [(fx * grid_step_um, fz * grid_step_um)
+            for fx in offsets for fz in offsets]
+
+
 @dataclass(frozen=True)
 class AveragedMode:
     """A mode quantity averaged over sub-cell placements."""
@@ -51,6 +69,7 @@ class AveragedMode:
     steps_per_wvl: int
     grid_step_um: float
     offsets: tuple[float, ...]
+    axis: str
     n_eff_values: tuple[float, ...]
     n_group_values: tuple[float, ...]
     n_eff: float
@@ -70,19 +89,29 @@ def measure_averaged(cross_section: CrossSection,
                      settings: SolveSettings | None = None,
                      *,
                      offsets=DEFAULT_OFFSETS,
-                     criteria: SelectionCriteria | None = None) -> AveragedMode:
-    """Solve at each sub-cell offset and average."""
+                     criteria: SelectionCriteria | None = None,
+                     axis: str = "z") -> AveragedMode:
+    """Solve at each sub-cell offset and average.
+
+    ``axis`` selects which direction the structure is walked across the grid:
+    ``"z"``, ``"x"``, or ``"xz"`` for the full two-dimensional grid of offsets.
+    A derivative taken along one geometry axis is only cleaned by averaging
+    over that axis -- a z-average leaves an x-alignment residue in ``dn/dw``.
+    """
     settings = settings or SolveSettings(steps_per_wvl=26)
     criteria = criteria or SelectionCriteria()
     if len(offsets) < 2:
         raise ValueError("averaging needs at least two offsets")
 
     dl = settings.grid_step_um(cross_section)
+    places = placements(offsets, dl, axis)
+
     n_effs: list[float] = []
     n_groups: list[float] = []
-    for fraction in offsets:
+    for x_off, z_off in places:
         selected = select_te_core_mode(
-            solve(cross_section, settings, z_offset_um=fraction * dl), criteria)
+            solve(cross_section, settings, z_offset_um=z_off,
+                  x_offset_um=x_off), criteria)
         n_effs.append(selected.n_eff)
         n_groups.append(selected.n_group if selected.n_group is not None
                         else float("nan"))
@@ -92,6 +121,7 @@ def measure_averaged(cross_section: CrossSection,
         steps_per_wvl=settings.steps_per_wvl,
         grid_step_um=dl,
         offsets=tuple(offsets),
+        axis=axis,
         n_eff_values=tuple(n_effs),
         n_group_values=tuple(n_groups),
         n_eff=sum(n_effs) / len(n_effs),

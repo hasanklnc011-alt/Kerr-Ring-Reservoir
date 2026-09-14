@@ -67,7 +67,7 @@ class ModeSolution:
 
 
 def build_simulation(cross_section: CrossSection, settings: SolveSettings,
-                     z_offset_um: float = 0.0):
+                     z_offset_um: float = 0.0, x_offset_um: float = 0.0):
     """A 2D (y-invariant) simulation holding the waveguide cross-section."""
     import tidy3d as td
 
@@ -85,7 +85,7 @@ def build_simulation(cross_section: CrossSection, settings: SolveSettings,
 
     core = td.Structure(
         geometry=td.Box(
-            center=(0.0, 0.0, cross_section.core_center_z + z_offset_um),
+            center=(x_offset_um, 0.0, cross_section.core_center_z + z_offset_um),
             size=(cross_section.width_um, td.inf, cross_section.height_um),
         ),
         medium=td.Medium(permittivity=cross_section.core_index ** 2),
@@ -113,12 +113,12 @@ def build_simulation(cross_section: CrossSection, settings: SolveSettings,
 
 
 def solve(cross_section: CrossSection, settings: SolveSettings,
-          z_offset_um: float = 0.0) -> ModeSolution:
+          z_offset_um: float = 0.0, x_offset_um: float = 0.0) -> ModeSolution:
     """Run one local eigenmode solve and package what the gates need."""
     import tidy3d as td
     from tidy3d.plugins.mode import ModeSolver
 
-    sim = build_simulation(cross_section, settings, z_offset_um)
+    sim = build_simulation(cross_section, settings, z_offset_um, x_offset_um)
     freq = td.C_0 / settings.wavelength_um
 
     size_x = cross_section.width_um + 2 * settings.pad_x_um
@@ -143,7 +143,7 @@ def solve(cross_section: CrossSection, settings: SolveSettings,
     te_fraction = np.asarray(data.pol_fraction["te"].values).ravel()
 
     fields = {name: getattr(data, name) for name in ("Ex", "Ey", "Ez")}
-    confinement = core_confinement(fields, cross_section)
+    confinement = core_confinement(fields, cross_section, x_offset_um)
 
     return ModeSolution(
         cross_section=cross_section.name,
@@ -159,13 +159,16 @@ def solve(cross_section: CrossSection, settings: SolveSettings,
     )
 
 
-def core_confinement(fields: dict, cross_section: CrossSection) -> np.ndarray:
+def core_confinement(fields: dict, cross_section: CrossSection,
+                     x_offset_um: float = 0.0) -> np.ndarray:
     """Fraction of ``|E|^2`` inside the core, per mode.
 
     A guided core mode must actually live in the core; this is the criterion
     the inherited selector lacked.
     """
     (x_lo, x_hi), (z_lo, z_hi) = cross_section.core_bounds()
+    x_lo += x_offset_um
+    x_hi += x_offset_um
 
     total = None
     inside = None
