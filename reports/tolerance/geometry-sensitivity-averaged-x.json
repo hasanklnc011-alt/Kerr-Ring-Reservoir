@@ -1,0 +1,50 @@
+{
+  "axis": "x",
+  "environment": {
+    "extras_installed": true,
+    "extras_version": "2.11.2",
+    "numpy": "2.4.6",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.14.7",
+    "reason": "subpixel-averaged solve succeeded and changed the result",
+    "subpixel_available": true,
+    "subpixel_effect": 0.11719679819117035,
+    "tidy3d": "2.11.2"
+  },
+  "offset_averaged": true,
+  "schema": "mrr-geometry-sensitivity/2",
+  "sensitivities": [
+    {
+      "alignment_swing": 0.003608042540663714,
+      "change_vs_single_alignment_dlambda_d_height_pm_per_nm_percent": -1.1039297938287966,
+      "change_vs_single_alignment_dlambda_d_width_pm_per_nm_percent": -8.970061317281894,
+      "cross_section": "Si-450x220",
+      "dlambda_d_height_pm_per_nm": 1926.6227608901409,
+      "dlambda_d_width_pm_per_nm": 813.954100817881,
+      "dn_eff_d_height_per_um": 5.154014289836972,
+      "dn_eff_d_width_per_um": 2.177453288753073,
+      "half_step_nm": 1.0,
+      "n_eff": 2.352659683702974,
+      "n_group": 4.146490071339315,
+      "offset_averaged": true,
+      "steps_per_wvl": 26
+    },
+    {
+      "alignment_swing": 0.0007903777692011005,
+      "change_vs_single_alignment_dlambda_d_height_pm_per_nm_percent": 0.41617574029226384,
+      "change_vs_single_alignment_dlambda_d_width_pm_per_nm_percent": -10.160900715344546,
+      "cross_section": "SiN-1200x800",
+      "dlambda_d_height_pm_per_nm": 191.49081267931268,
+      "dlambda_d_width_pm_per_nm": 83.36744693213305,
+      "dn_eff_d_height_per_um": 0.25871071933869505,
+      "dn_eff_d_width_per_um": 0.1126323078557423,
+      "half_step_nm": 1.0,
+      "n_eff": 1.801940757666635,
+      "n_group": 2.0941036771645534,
+      "offset_averaged": true,
+      "steps_per_wvl": 26
+    }
+  ],
+  "supersedes_file": "geometry-sensitivity.json",
+  "wavelength_nm": 1550.0
+}

@@ -86,17 +86,53 @@ değil tesadüftü — ve tesadüf olduğu için güvenilmez.
 hücre-altı konumu kayıyor. Ölçülen: `pad` 1.0→5.0 µm arasında `n_eff`
 **1.99e-2** yayılımla düzensizce zıplıyor (monoton değil). Aynı etki.
 
-## 6. Etkilenen ölçümler
+## 6. Etki eksenlere ortogonal ayrışıyor
+
+Geometri türevleri üç kez ölçüldü: tek hizalama, yalnız-x ortalaması,
+yalnız-z ortalaması.
+
+| kesit | türev | tek hiz. | x-ort | z-ort | x etkisi | z etkisi |
+|---|---|---|---|---|---|---|
+| Si | `dλ/dw` | 894.16 | **813.95** | 896.59 | −9.0% | +0.3% |
+| Si | `dλ/dh` | 1948.13 | 1926.62 | **1425.79** | −1.1% | −26.8% |
+| SiN | `dλ/dw` | 92.80 | **83.37** | 91.90 | −10.2% | −1.0% |
+| SiN | `dλ/dh` | 190.70 | 191.49 | **147.63** | +0.4% | −22.6% |
+
+**Her eksenin ortalaması yalnız kendi türevini değiştiriyor, diğerini %1
+içinde bırakıyor.** Gerekçe: genişlik türevinde `+δw` ve `−δw` noktaları aynı
+z-hizasını paylaşır, z-artefaktı merkezî farkta götürür; kalınlık için tersi.
+
+Dolayısıyla her türev **kendi eksenini ortalayan** koşudan alınır.
+Birleştirme: `scripts/merge_sensitivity_per_axis.py` →
+`reports/tolerance/geometry-sensitivity-final.json`.
+
+Tam `xz` dış çarpımı (16 yerleşim/nokta, 160 solve) pahalı olduğu için
+koşulmadı; ölçülen %1'lik çapraz sızıntı bunu gereksiz kılıyor. Bu bir
+atlama kararıdır ve dış görüşe sorulmuştur.
+
+### Nominal noktadaki salınım
+
+| kesit | x | z | oran |
+|---|---|---|---|
+| Si 450×220 | 3.608e-03 | 1.417e-02 | z, x'in 3.9 katı |
+| SiN 1200×800 | 7.904e-04 | 1.528e-03 | z, x'in 1.9 katı |
+
+SiN, Si'den **9–18 kat** az etkileniyor. Etki indeks kontrastıyla ölçekleniyor
+gibi görünüyor, ama iki kesit farklı boyutta olduğundan (450×220 vs 1200×800)
+kontrast mı mutlak boyut mu belirleyici, ayrılmadı.
+
+## 7. Etkilenen ölçümler
 
 | ölçüm | durum |
 |---|---|
 | G1 dört kapı | tek hizalamada geçerli; ofset ortalamasıyla yeniden ifade edilmeli |
-| `dλ/dw`, `dλ/dh` | **yeniden ölçüldü** (`geometry-sensitivity-averaged.json`) |
+| `dλ/dw`, `dλ/dh` | **yeniden ölçüldü**, eksen-başına (`geometry-sensitivity-final.json`) |
 | `κ(gap)` | nitel sonuç sağlam; mutlak `L_d` yeniden ölçülmeli |
 | G0, G2, `ε`, slot/port | etkilenmedi |
 
-## 7. Sınırlar
+## 8. Sınırlar
 
-Tek kesit (Si 450×220), yalnız z ekseninde öteleme, dört ofset noktası.
-x eksenindeki hizalama ayrıca sınanmadı. Uzak çözücüyle karşılaştırma yok.
+Hizalama taraması tek kesitte (Si 450×220) ve yalnız z ekseninde yapıldı;
+türev ölçümlerinde her iki eksen ayrı ayrı ortalandı ama tam `xz` dış çarpımı
+koşulmadı. Uzak çözücüyle karşılaştırma yok.
 Dört ofsetin trapez ortalaması; daha fazla nokta daha iyi bir ortalama verebilir.

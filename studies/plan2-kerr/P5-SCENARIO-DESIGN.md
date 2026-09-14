@@ -19,19 +19,24 @@ Bu bir P5 **girdisidir**, P5 sonucu değildir. Hiçbir kapı geçmez.
 
 ## 1. Ölçülen geometri hassasiyeti
 
-Merkezî fark, ±1 nm, 26 step/λ, local subpixel açık.
+Merkezî fark, ±1 nm, 26 step/λ, local subpixel açık, **eksen-başına
+hücre-altı ofset ortalamalı** (bkz. [hizalama kararı](../../docs/decisions/2026-09-15-g1-subcell-alignment.md)).
 
-| kesit | `dn_eff/dw` | `dn_eff/dh` | `dλ/dw` | `dλ/dh` |
-|---|---|---|---|---|
-| Si 450×220 | 2.393 /µm | 5.214 /µm | **894.2 pm/nm** | 1948.1 pm/nm |
-| SiN 1200×800 | 0.1254 /µm | 0.2576 /µm | **92.8 pm/nm** | 190.7 pm/nm |
+| kesit | `dλ/dw` (x-ort) | `dλ/dh` (z-ort) |
+|---|---|---|
+| Si 450×220 | **813.95 pm/nm** | 1425.79 pm/nm |
+| SiN 1200×800 | **83.37 pm/nm** | 147.63 pm/nm |
 
-Linewidth cinsinden (`FWHM = λ/Q_L`):
+Linewidth cinsinden, çalışma `Q_L = 4.22e5` (FWHM 3.671 pm):
 
-| | linewidth | Si genişlik | Si kalınlık | SiN genişlik | SiN kalınlık |
-|---|---|---|---|---|---|
-| çalışma `Q_L = 4.22e5` | 3.67 pm | 243.6 /nm | 530.7 /nm | **25.3 /nm** | 51.9 /nm |
-| katı `Q_L = 1.94e6` | 0.80 pm | 1121.7 /nm | 2443.9 /nm | 116.4 /nm | 239.2 /nm |
+| kesit | genişlik | kalınlık |
+|---|---|---|
+| Si 450×220 | 221.7 /nm | 388.4 /nm |
+| SiN 1200×800 | **22.7 /nm** | 40.2 /nm |
+
+Tek hizalamayla ölçülen ilk değerler sırasıyla 894.2 / 1948.1 / 92.8 / 190.7
+idi; eksen-başına ortalama genişlikte %9–10, kalınlıkta %23–27 düzeltti.
+Ham veri: `reports/tolerance/geometry-sensitivity-final.json`.
 
 ### Üç okuma
 
@@ -39,14 +44,14 @@ Linewidth cinsinden (`FWHM = λ/Q_L`):
    linewidth → 4.6 kat fazla tolerans payı. Retention kararı bu açıdan
    yanıltıcı değil, lehte.
 2. **Buna rağmen trim kaçınılmaz.** Gevşemiş `Q`'da bile 1 nm genişlik hatası
-   SiN'de rezonansı 25 linewidth kaydırıyor. Proses toleransı birkaç nm ise
+   SiN'de rezonansı 23 linewidth kaydırıyor. Proses toleransı birkaç nm ise
    rezonans yüzlerce linewidth uzağa düşer. Aktif trim mimarinin parçasıdır,
    opsiyon değil.
-3. **Kalınlık genişlikten baskın** (SiN'de 2.1×, Si'de 2.2×). Film kalınlığı
+3. **Kalınlık genişlikten baskın** (SiN'de 1.8×, Si'de 1.8×). Film kalınlığı
    tipik olarak dilim içinde genişlikten daha iyi kontrol edilir ama dilimler
    arası kayar; bu ayrı bir eksen olmalı.
 
-**SiN, Si'den ~9.6 kat daha az hassas.** G1 platform değişiminin *sayısal*
+**SiN, Si'den ~9.8 kat daha az hassas.** G1 platform değişiminin *sayısal*
 gerekçesini çürütmüştü; bu *fiziksel* bir gerekçe ve ayakta duruyor.
 
 ## 2. Senaryo eksenleri

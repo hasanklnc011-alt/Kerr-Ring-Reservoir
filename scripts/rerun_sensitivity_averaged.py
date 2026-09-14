@@ -23,7 +23,7 @@ from fdtd.modes.sensitivity import SolveSettings, measure
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OLD = REPO_ROOT / "reports" / "tolerance" / "geometry-sensitivity.json"
-NEW = REPO_ROOT / "reports" / "tolerance" / "geometry-sensitivity-averaged-xz.json"
+NEW = REPO_ROOT / "reports" / "tolerance" / "geometry-sensitivity-averaged-x.json"
 
 
 def main() -> int:
@@ -38,8 +38,8 @@ def main() -> int:
     results = []
     for name in sorted(CROSS_SECTIONS):
         cs = CROSS_SECTIONS[name]
-        print(f"R: measuring {name} (xz offset-averaged, 16 placements/point) ...", flush=True)
-        s = measure(cs, settings, offset_averaged=True, axis="xz")
+        print(f"R: measuring {name} (x offset-averaged, 4 placements/point) ...", flush=True)
+        s = measure(cs, settings, offset_averaged=True, axis="x")
         row = s.to_dict()
         old = old_rows.get(name)
         if old:
@@ -57,7 +57,7 @@ def main() -> int:
     NEW.write_text(json.dumps({
         "schema": "mrr-geometry-sensitivity/2",
         "offset_averaged": True,
-        "axis": "xz",
+        "axis": "x",
         "environment": env.to_dict(),
         "wavelength_nm": 1550.0,
         "supersedes_file": OLD.name,

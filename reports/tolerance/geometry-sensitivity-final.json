@@ -1,0 +1,48 @@
+{
+  "linewidth_pm": 3.671035013804086,
+  "method": "per-axis sub-cell offset averaging; each derivative taken from the run that averaged over its own grid axis",
+  "q_loaded": 422224.248521624,
+  "schema": "mrr-geometry-sensitivity/3",
+  "sensitivities": [
+    {
+      "alignment_swing_x": 0.003608042540663714,
+      "alignment_swing_z": 0.014168981069738962,
+      "cross_axis_leakage_height_percent": -1.1039297938287966,
+      "cross_axis_leakage_width_percent": 0.27162916796568615,
+      "cross_section": "Si-450x220",
+      "dlambda_d_height_pm_per_nm": 1425.793212011771,
+      "dlambda_d_width_pm_per_nm": 813.954100817881,
+      "height_change_vs_single_percent": -26.8121666280684,
+      "height_linewidths_per_nm": 388.38997902509846,
+      "height_source": "z-offset-averaged run",
+      "single_alignment_height_pm_per_nm": 1948.1287344114487,
+      "single_alignment_width_pm_per_nm": 894.1608800318888,
+      "width_change_vs_single_percent": -8.970061317281894,
+      "width_linewidths_per_nm": 221.72332809608,
+      "width_source": "x-offset-averaged run"
+    },
+    {
+      "alignment_swing_x": 0.0007903777692011005,
+      "alignment_swing_z": 0.0015278371408902203,
+      "cross_axis_leakage_height_percent": 0.41617574029226384,
+      "cross_axis_leakage_width_percent": -0.9639722579080579,
+      "cross_section": "SiN-1200x800",
+      "dlambda_d_height_pm_per_nm": 147.62512084633912,
+      "dlambda_d_width_pm_per_nm": 83.36744693213305,
+      "height_change_vs_single_percent": -22.586625064809983,
+      "height_linewidths_per_nm": 40.21348755629643,
+      "height_source": "z-offset-averaged run",
+      "single_alignment_height_pm_per_nm": 190.69717729000953,
+      "single_alignment_width_pm_per_nm": 92.79639666464492,
+      "width_change_vs_single_percent": -10.160900715344546,
+      "width_linewidths_per_nm": 22.70952105295887,
+      "width_source": "x-offset-averaged run"
+    }
+  ],
+  "sources": {
+    "height": "geometry-sensitivity-averaged.json",
+    "single_alignment_reference": "geometry-sensitivity.json",
+    "width": "geometry-sensitivity-averaged-x.json"
+  },
+  "wavelength_nm": 1550.0
+}
